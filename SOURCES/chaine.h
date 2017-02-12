@@ -10,6 +10,6 @@ int is_alnum( char*); // renvoit 1 si la chaine est alphanumérique, 0 sinon
 
 int is_num( char*); // renvoit 1 si la chaine est full numérique, 0 sinon
 
-char* delete_end_char( char*); //supprime les caractères de fin de chaine
+int delete_end_char( char*, int, char*); //supprime les caractères de fin de chaine
 
 #endif
