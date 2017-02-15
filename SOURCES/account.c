@@ -77,22 +77,3 @@ void delete_account(int nb_secu,FILE* bdd)
       }
    }
 }
-
-int main(int argc,char **argv)
-{
-   FILE* bdd = NULL;
-   bdd = fopen("bdd.txt","a");
-   char name[]="Louis";
-   char fonction[]="patient";
-   int nb_secu=2003;
-
-   creat_account(name,fonction,nb_secu,bdd);
-   delete_account(nb_secu,bdd);   
-   return EXIT_SUCCESS;
-}
-
-
-
-
-
-
