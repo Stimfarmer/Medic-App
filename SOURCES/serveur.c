@@ -1,11 +1,4 @@
 #include "fonction_serveur.h"
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <sys/socket.h>
-#include <arpa/inet.h>
-#include <unistd.h>
-#include <pthread.h>
 
 int main(int argc , char *argv[])
 {
@@ -24,7 +17,13 @@ int main(int argc , char *argv[])
    server.sin_family = AF_INET;
    server.sin_addr.s_addr = INADDR_ANY;
    server.sin_port = htons( 8888 );
-     
+   //On set la socket
+   if( setsockopt( socket_desc, SOL_SOCKET, SO_REUSEADDR, &(int){1}, sizeof(int)))
+   {
+      perror("Erreur du set de la socket");
+      return 1;
+   }
+
    //On bind la socket
    if( bind(socket_desc,(struct sockaddr *)&server , sizeof(server)) < 0)
    {
@@ -56,7 +55,7 @@ int main(int argc , char *argv[])
          
        //Now join the thread , so that we dont terminate before the thread
        //pthread_join( sniffer_thread , NULL);
-       puts("Handler assigned");
+       puts("Handler assigned\n");
    }
      
    if (client_sock < 0)
