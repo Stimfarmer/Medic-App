@@ -1,4 +1,5 @@
 #include "fonction_serveur.h"
+#include "fonction_client_on_serveur.h"
 
 int main(int argc , char *argv[])
 {
