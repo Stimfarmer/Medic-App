@@ -78,9 +78,6 @@ int function_to_select(SSL *ssl, char *cmd)
    else if(strcmp(cmd,"quit") == 0)
    {
       printf("Quitter IN\n");
-      strcat(cmd,message);
-
-      SSL_write(ssl , cmd , strlen(cmd));
       quit_function(ssl);
       printf("Quitter OUT\n");
       printf("Fonction de choix de la commande OUT\n");

@@ -138,7 +138,9 @@ void Servlet(SSL* ssl) /* Serve the connection -- threadable */ // succède à "
 	SSL_write(ssl,liste_cmd,strlen(liste_cmd));
         do
 	{
+	  printf("Deb\n");
 	  bytes = SSL_read(ssl, buf, sizeof(buf));
+	  printf("Deb\n");
 	  if ( bytes > 0 )
 	  {
 	      if((delete_end_char(cmd,sizeof(cmd),buf))==-1)
@@ -151,12 +153,15 @@ void Servlet(SSL* ssl) /* Serve the connection -- threadable */ // succède à "
 	      //SSL_write(ssl, reply, strlen(reply)); /* send reply */
               printf("La commande serveur est %s\n",cmd);
 	      function_to_select(ssl, cmd);
+
               bzero(buf,1024);
 	      bzero(cmd,200);
+
 	      //bytes = SSL_read(ssl, buf, sizeof(buf));
 	  }
 	  else
 	  {
+
 	      ERR_print_errors_fp(stderr);
 	      break;
 	  }
@@ -165,6 +170,7 @@ void Servlet(SSL* ssl) /* Serve the connection -- threadable */ // succède à "
 	}
 	while(bytes > 0);
     }
+    printf("Deb\n");
     sd = SSL_get_fd(ssl);       /* get socket connection */
     //SSL_free(ssl);         /* release SSL state */
     close(sd);          /* close connection */

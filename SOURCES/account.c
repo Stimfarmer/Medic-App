@@ -229,6 +229,8 @@ int ask(user usr, void *ssl)
       bzero(client_message,2000);
       bzero(msg,100);
    }while(read_size <= 0);
+	
+	bzero(usr.login,10);
 
       if(usr.surname[0]>64 && usr.surname[0]<91)
    {   
@@ -263,7 +265,7 @@ int inlog(user usr,FILE* bdd, void* ssl)
 {
    char *log = malloc(20*sizeof(char));
    char *mdp = malloc(20*sizeof(char));
-   char *message ,client_message[2000],msg[100];
+   char *message ,client_message[2000],msg[100],petit_buffer[50];
    int read_size;
  
    usr = alloc_user(usr);
@@ -330,10 +332,12 @@ int inlog(user usr,FILE* bdd, void* ssl)
       {
 	 printf("\nLOG IN SUCCESS\n");
 	 message = "\nLog as ";
-         SSL_write(ssl,message,strlen(message));
-         SSL_write(ssl,usr.login,strlen(usr.login));
-	 message = "\n";
-         SSL_write(ssl,message,strlen(message));
+	 bzero(petit_buffer,50);
+	 sprintf(petit_buffer,message);
+	 sprintf(petit_buffer + strlen(petit_buffer),usr.login);
+	 sprintf(petit_buffer + strlen(petit_buffer),"\n");
+
+	 SSL_write(ssl,petit_buffer,strlen(petit_buffer));
 	 return 0;
       }
    }
