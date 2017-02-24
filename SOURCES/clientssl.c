@@ -111,8 +111,8 @@ int main(int argc, char **argv)
         exit(0);
     }*/
     SSL_library_init();
-    hostname="127.0.0.1";
-    portnum="8888";
+    hostname=argv[1];
+    portnum=argv[2];
  
     ctx = InitCTX();
     LoadCertificates(ctx, "client.crt", "client.key");

@@ -187,7 +187,7 @@ int main(int argc, char **argv)
     }*/
     SSL_library_init();
  
-    portnum = "8888"; /******************* 8888 ******************/
+    portnum = argv[1]; /******************* 8888 ******************/
     ctx = InitServerCTX();        /* initialize SSL */
     LoadCertificates(ctx, "server.cert", "server.pem"); /* load certs */
     server = OpenListener(atoi(portnum));    /* create server socket */
