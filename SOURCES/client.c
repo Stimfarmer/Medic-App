@@ -32,6 +32,15 @@ int main(int argc , char *argv[])
    }
      
    puts("Connected\n");
+
+   if( recv(sock , server_reply , 2000 , 0) < 0)
+   {
+       puts("recv failed");
+   }
+
+   puts("Server>");
+   puts(server_reply);
+   bzero(server_reply,2000);
      
    //keep communicating with server
    while(1)
@@ -52,6 +61,12 @@ int main(int argc , char *argv[])
           puts("recv failed");
           break;
       } 
+
+      if(strcmp(message,"quit") == 0)
+      {
+         printf("Deconnexion...\n");
+         break;
+      }
          
       puts("Server>");
       puts(server_reply);
@@ -60,5 +75,6 @@ int main(int argc , char *argv[])
    }
      
    close(sock);
+   printf("Deconnecte\n");
    return 0;
 }

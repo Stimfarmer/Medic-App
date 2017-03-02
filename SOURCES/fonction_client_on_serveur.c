@@ -7,7 +7,11 @@ int quit_function( void *sock_fd)
    char *message;
    message = "Vous allez etre deconnecte...\n";
    
-   write((int)sock,message,strlen(message));   
+   write((int)sock,message,strlen(message));
+
+   message = "quit";
+
+   write((int)sock,message,strlen(message));
    
    //On libère le pointeur sur le numéro de descripteur de la socket
    free(sock_fd);

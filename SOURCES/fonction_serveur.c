@@ -11,10 +11,7 @@ void *connection_handler(void *socket_desc)
    char commande[100];
      
    //On envoie quelques informations au client
-   message = "Bonjour, je suis le thread qui te gere!\n";
-   write(sock , message , strlen(message));
-     
-   message = "1-\"auth\" pour vous authentifier!\n2-\"help\" pour obtenir de l'aide\n3-\"quit\" pour quitter le serveur!\n";
+   message = "Bonjour, je suis le thread qui te gere!\n1-\"auth\" pour vous authentifier!\n2-\"insc\" pour vous inscrire!\n3-\"help\" pour obtenir de l'aide\n4-\"quit\" pour quitter le serveur!\n";
    write(sock , message , strlen(message));
      
    //On reçoit un message de la part du client
@@ -76,7 +73,7 @@ int function_to_select( void *socket_desc, char *cmd)
       //affichage_aide_function(socket_desc);
       return 0;
    }
-   if(strcmp(cmd,"quit") == 0)
+   else if(strcmp(cmd,"quit") == 0)
    {
       printf("Quitter\n");
       strcat(cmd,message);
@@ -85,8 +82,9 @@ int function_to_select( void *socket_desc, char *cmd)
       return 0;
    }
    else
+      printf("Commande non valide\n");
       message = "Entrez une commande valide...\n";
-      write((int)socket_desc, message, strlen(message));
+      write(sock, message, strlen(message));
       return -1;
 
 }
