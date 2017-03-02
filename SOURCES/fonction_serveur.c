@@ -1,6 +1,10 @@
 #include "fonction_serveur.h"
 #include "fonction_client_on_serveur.h"
 #include "chaine.h"
+#include <openssl/applink.c>
+#include <openssl/bio.h>
+#include <openssl/ssl.h>
+#include <openssl/err.h>
 
 void *connection_handler(void *socket_desc)
 {
@@ -40,6 +44,28 @@ void *connection_handler(void *socket_desc)
      
    return 0;
 }
+
+
+
+void InitializeSSL()
+{
+  SSL_load_error_strings();
+  SSL_library_init();
+  OpenSSL_and_all_algorithms();
+}
+
+void DestroySSL()
+{
+  ERR_free_strings();
+  EVP_cleanup();
+}
+
+void ShutdownSSL()
+{
+  SSL_shutdown(ssl);
+  SSL_free(ssl);
+}
+
 
 int function_to_select( void *socket_desc, char *cmd)
 {

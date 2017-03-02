@@ -1,9 +1,16 @@
 #include "fonction_serveur.h"
 #include "fonction_client_on_serveur.h"
 
+
+
 int main(int argc , char *argv[])
 {
+
    int socket_desc , client_sock , c , *new_sock;
+   SSL_CTX *sslctx;
+   SSL *cSSL;
+   InitializeSSL();
+   
    struct sockaddr_in server , client;
      
    //On crée la socket
@@ -42,11 +49,25 @@ int main(int argc , char *argv[])
    c = sizeof(struct sockaddr_in);
    while( (client_sock = accept(socket_desc, (struct sockaddr *)&client, (socklen_t*)&c)) )
    {
+     pthread_t sniffer_thread;
+     new_sock = malloc(1);
+     *new_sock = client_sock;
+     
+     sslctx = SSL_CTX_new( SSLv23_server_method() );
+     SSL_CTX_set_options(sslctx, SSL_OP_SINGLE_DH_USE);
+     int use_cert = SSL_CTX_use_certificate_file(sslctx, "/serverCertificate.pem" , SSL_FILETYPE_PEM );
+     int use_prv = SSL_CTX_use_PrivateKey_file(sslctx, "/serverCertificate.pem" , SSL_FILETYPE_PEM );
+     cSSL = SSL_new(sslctx);
+     SSL_set_fd(cSSL,new_sock);
+     
+     if(ssl_err <= 0)
+     {
+       ShutdownSSL();
+     }
+     
+     SSL_write(cSSL, "Hi :3\n", 6);
       puts("Connection acceptée");
          
-      pthread_t sniffer_thread;
-      new_sock = malloc(1);
-      *new_sock = client_sock;
          
       if( pthread_create( &sniffer_thread , NULL ,  connection_handler , (void*) new_sock) < 0)
        {

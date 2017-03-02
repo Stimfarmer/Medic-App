@@ -17,4 +17,8 @@ void *connection_handler(void *); // la fonction permettant de créer un thread 
 int function_to_select(void *, char*); // fonction permettant de choisir quelle fonction est à executer suite
 //à la commande du client, renvoie -1 si aucune fonction ne correspond à la commande écrite
 
+void InitializeSSL();
+void ShutdownSSL();
+void DestroySSL();
+
 #endif 
