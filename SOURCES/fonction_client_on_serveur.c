@@ -28,7 +28,7 @@ int inscription_function( void *sock_fd)
    int sock = *(int*)sock_fd;
    char *message;
  
-   message = "Veuillez remplir les champs necessaires a la creation de votre compte\n";
+   message = "Veuillez remplir les champs necessaires a la creation de votre compte\nSaisir votre nom\n";
 
    write((int)sock,message,strlen(message));
 

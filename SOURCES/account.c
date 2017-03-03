@@ -46,11 +46,6 @@ int ask(char *name, char* fonction, int nb_secu, void *sock_fd)
    char *message ,client_message[2000],msg[100];
    int sock = *(int*)sock_fd;
    int read_size;
-   message = "Saisir votre nom\n";
-   
-   
-
-   write((int)sock,message,strlen(message));
    
    read_size = recv(sock , client_message , sizeof(client_message) , 0);
 
