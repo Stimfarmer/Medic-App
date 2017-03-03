@@ -62,7 +62,7 @@ int function_to_select( void *socket_desc, char *cmd)
       printf("Inscription\n");
       strcat(cmd,message);
       write(sock , cmd , strlen(cmd));
-      //inscription_function(socket_desc);
+      inscription_function(socket_desc);
       return 0;
    }
    else if(strcmp(cmd,"help") == 0)

@@ -1,14 +1,5 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-typedef struct{
-   char *name;
-   char *fonction;
-   int nb_secu;
-   char *droit;
-   char *mdp;
-} user;
+#include "account.h"
+#include "chaine.h"
 
 void init_user(user usr)
 {
@@ -50,21 +41,86 @@ int nb_lines(FILE* bdd)
    return nb_lignes;
 }
 
-int ask(char *name, char* fonction, int nb_secu)
+int ask(char *name, char* fonction, int nb_secu, void *sock_fd)
 {
-   printf("Saisir nom:");
+   char *message ,client_message[2000],msg[100];
+   int sock = *(int*)sock_fd;
+   int read_size;
+   message = "Saisir votre nom\n";
+   
+   
+
+   write((int)sock,message,strlen(message));
+   
+   read_size = recv(sock , client_message , sizeof(client_message) , 0);
+
+   if((delete_end_char(msg,sizeof(msg),client_message))==-1)
+   {
+      perror("Erreur supression caractère de fin!");
+      return -1;
+   }
+
+   strcpy(name,msg);
+
+   printf("Name:%s\n",name);  
+
+   bzero(client_message,2000);
+   bzero(msg,100);
+
+   message = "Saisir votre fonction\n";
+
+   write((int)sock,message,strlen(message));
+
+   read_size = recv(sock , client_message , sizeof(client_message) , 0);
+
+   if((delete_end_char(msg,sizeof(msg),client_message))==-1)
+   {
+      perror("Erreur supression caractère de fin!");
+      return -1;
+   }
+
+   strcpy(fonction,msg);
+
+   printf("Fonction:%s\n",fonction);
+
+   bzero(client_message,2000);
+   bzero(msg,100);
+
+   message = "Saisir votre numero de secu\n";
+
+   write((int)sock,message,strlen(message));
+
+   read_size = recv(sock , client_message , sizeof(client_message) , 0);
+
+   if((delete_end_char(msg,sizeof(msg),client_message))==-1)
+      {
+         perror("Erreur supression caractère de fin!");
+         return -1;
+      }
+
+   nb_secu = atoi(msg);
+
+   printf("Nb_secu:%i\n",nb_secu);
+
+   bzero(client_message,2000);
+   bzero(msg,100);
+
+   read_size++;
+
+   /*printf("Saisir nom:");
    scanf("%s",name);
    printf("\nSaisir fonction:");
    scanf("%s",fonction);
    printf("\nSaisir numero de secu:");
    scanf("%d",&nb_secu);
+   return nb_secu;*/
    return nb_secu;
    
 }
 
 
 
-int creat_account(FILE*bdd)
+int creat_account(FILE*bdd, void* sock_fd)
 {
    int cursor;
    int trouve = 0;
@@ -86,7 +142,7 @@ int creat_account(FILE*bdd)
 
    printf("\n______CREATION DE COMPTE______\n");
 
-   nb_secu = ask(name,fonction,nb_secu);
+   nb_secu = ask(name,fonction,nb_secu, sock_fd);
 
    bdd = fopen("bdd.txt","r");
    while((cursor = fgetc(bdd)) != EOF)
