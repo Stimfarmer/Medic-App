@@ -1,10 +1,12 @@
 #include "fonction_serveur.h"
 #include "fonction_client_on_serveur.h"
 #include "chaine.h"
-#include <openssl/applink.c>
 #include <openssl/bio.h>
+#include <openssl/conf.h>
+#include <openssl/evp.h>
 #include <openssl/ssl.h>
 #include <openssl/err.h>
+
 
 void *connection_handler(void *socket_desc)
 {
@@ -47,24 +49,62 @@ void *connection_handler(void *socket_desc)
 
 
 
-void InitializeSSL()
+void init_openssl()
 {
   SSL_load_error_strings();
-  SSL_library_init();
-  OpenSSL_and_all_algorithms();
+  OpenSSL_add_ssl_algorithms();
 }
 
-void DestroySSL()
+
+void cleanup_openssl()
 {
-  ERR_free_strings();
   EVP_cleanup();
 }
 
-void ShutdownSSL()
+
+SSL_CTX *create_context()
 {
-  SSL_shutdown(ssl);
-  SSL_free(ssl);
+  const SSL_METHOD *method;
+  SSL_CTX *ctx;
+  
+  method = SSLv23_server_method();
+  
+  ctx = SSL_CTX_new(method);
+  if(!ctx)
+  {
+    perror("Impossible de créer le contexte SSL");
+    ERR_print_errors_fp(stderr);
+    exit(EXIT_FAILURE);
+  }
+  
+  return ctx;
 }
+
+
+void configure_context(SSL_CTX *ctx)
+{
+  //SSL_CTX_set_ecdh_auto(ctx, 1);
+  
+  // Définition de la clé et du certificat
+  
+  if (SSL_CTX_use_certificate_file(ctx, "cert.pem", SSL_FILETYPE_PEM) < 0)
+  {
+    ERR_print_errors_fp(stderr);
+    exit(EXIT_FAILURE);
+  }
+  
+  if (SSL_CTX_use_PrivateKey_file(ctx, "key.pem", SSL_FILETYPE_PEM) < 0)
+  {
+    ERR_print_errors_fp(stderr);
+    exit(EXIT_FAILURE);
+  }
+  
+}
+
+  
+
+
+
 
 
 int function_to_select( void *socket_desc, char *cmd)

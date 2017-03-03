@@ -7,6 +7,10 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <pthread.h>
+#include <openssl/ssl.h>
+#include <openssl/err.h>
+#include <dlfcn.h>
+#include <sys/fcntl.h>
 
 
 /* fonction_serveur.h est un header servant à définir les fonctions
@@ -17,8 +21,12 @@ void *connection_handler(void *); // la fonction permettant de créer un thread 
 int function_to_select(void *, char*); // fonction permettant de choisir quelle fonction est à executer suite
 //à la commande du client, renvoie -1 si aucune fonction ne correspond à la commande écrite
 
-void InitializeSSL();
-void ShutdownSSL();
-void DestroySSL();
+void cleanup_openssl();
+
+void init_openssl();
+
+SSL_CTX *create_context();
+
+void configure_context(SSL_CTX *ctx);
 
 #endif 
