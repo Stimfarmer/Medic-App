@@ -43,52 +43,68 @@ void *connection_handler(void *socket_desc)
 
 int function_to_select( void *socket_desc, char *cmd)
 {
-   printf("Fonction de choix de la commande\n");
+   printf("Fonction de choix de la commande IN\n");
 
    char *message;
+   int error;
    int sock = *(int*)socket_desc;
    message = " est votre commande\n";
    
    if(strcmp(cmd,"auth") == 0)
    {
-      printf("Authentification\n");
+      printf("Authentification IN\n");
       strcat(cmd,message);
       write(sock , cmd , strlen(cmd));
       //authentification_function(socket_desc);
+      printf("Authentification OUT\n");
+      printf("Fonction de choix de la commande OUT\n");
       return 0;  
    }
    else if(strcmp(cmd,"insc") == 0)
    {
-      printf("Inscription\n");
+      printf("Inscription IN\n");
       strcat(cmd,message);
       write(sock , cmd , strlen(cmd));
-<<<<<<< HEAD
-      //inscription_function(socket_desc);
-=======
-      inscription_function(socket_desc);
->>>>>>> dde80e0c9f0efb3f65c152835b84b5fb18ac6eae
+      error = inscription_function(socket_desc);
+      if(error == -1)
+      {
+         message = "Inscription impossible, compte existant!\n";
+         write(sock, message, strlen(message));
+         printf("Inscription OUT\n");
+         printf("Fonction de choix de la commande OUT\n");
+         return -1;
+      }
+      message = "Inscription realisee avec succes!\n";
+      write(sock, message, strlen(message));
+      printf("Inscription OUT\n");
+      printf("Fonction de choix de la commande OUT\n");
       return 0;
    }
    else if(strcmp(cmd,"help") == 0)
    {
-      printf("Aide\n");
+      printf("Aide IN\n");
       strcat(cmd,message);
       write(sock , cmd , strlen(cmd));
       //affichage_aide_function(socket_desc);
+      printf("Aide OUT\n");
+      printf("Fonction de choix de la commande OUT\n");
       return 0;
    }
    else if(strcmp(cmd,"quit") == 0)
    {
-      printf("Quitter\n");
+      printf("Quitter IN\n");
       strcat(cmd,message);
       write(sock , cmd , strlen(cmd));
       quit_function(socket_desc);
+      printf("Quitter OUT\n");
+      printf("Fonction de choix de la commande OUT\n");
       return 0;
    }
    else
       printf("Commande non valide\n");
       message = "Entrez une commande valide...\n";
       write(sock, message, strlen(message));
+      printf("Fonction de choix de la commande OUT\n");
       return -1;
 
 }

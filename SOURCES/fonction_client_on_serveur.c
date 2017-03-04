@@ -1,8 +1,5 @@
 #include "fonction_client_on_serveur.h"
-<<<<<<< HEAD
-=======
 #include "account.h"
->>>>>>> dde80e0c9f0efb3f65c152835b84b5fb18ac6eae
 #include <stdio.h>
 
 int quit_function( void *sock_fd)
@@ -25,8 +22,6 @@ int quit_function( void *sock_fd)
 
    return 0;
 }
-<<<<<<< HEAD
-=======
 
 int inscription_function( void *sock_fd)
 {
@@ -42,9 +37,11 @@ int inscription_function( void *sock_fd)
    fclose(bdd);
 
    int  test = creat_account(bdd,sock_fd);
-
-   test = test+1;
-
+   if(test == -1)
+   {
+      return -1;
+   }
+   
    return 0;
 }
->>>>>>> dde80e0c9f0efb3f65c152835b84b5fb18ac6eae
+

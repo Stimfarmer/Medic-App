@@ -18,7 +18,7 @@ int main(int argc , char *argv[])
    {
       printf("Could not create socket");
    }
-   puts("Socket created");
+   //puts("Socket created");
      
    server.sin_addr.s_addr = inet_addr("127.0.0.1");
    server.sin_family = AF_INET;
@@ -38,14 +38,14 @@ int main(int argc , char *argv[])
        puts("recv failed");
    }
 
-   puts("Server>");
+   puts("SERVER>");
    puts(server_reply);
    bzero(server_reply,2000);
      
    //keep communicating with server
    while(1)
    {
-      printf("You>");
+      printf("YOU>");
       scanf("%s" , message);
       
       //Send some data
@@ -68,7 +68,7 @@ int main(int argc , char *argv[])
          break;
       }
          
-      puts("Server>");
+      puts("SERVER>");
       puts(server_reply);
       bzero(server_reply,2000);
       bzero(message,1000);

@@ -1,19 +1,5 @@
-<<<<<<< HEAD
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-typedef struct{
-   char *name;
-   char *fonction;
-   int nb_secu;
-   char *droit;
-   char *mdp;
-} user;
-=======
 #include "account.h"
 #include "chaine.h"
->>>>>>> dde80e0c9f0efb3f65c152835b84b5fb18ac6eae
 
 void init_user(user usr)
 {
@@ -55,11 +41,6 @@ int nb_lines(FILE* bdd)
    return nb_lignes;
 }
 
-<<<<<<< HEAD
-int ask(char *name, char* fonction, int nb_secu)
-{
-   printf("Saisir nom:");
-=======
 int ask(char *name, char* fonction, int nb_secu, void *sock_fd)
 {
    char *message ,client_message[2000],msg[100];
@@ -121,28 +102,14 @@ int ask(char *name, char* fonction, int nb_secu, void *sock_fd)
 
    read_size++;
 
-   /*printf("Saisir nom:");
->>>>>>> dde80e0c9f0efb3f65c152835b84b5fb18ac6eae
-   scanf("%s",name);
-   printf("\nSaisir fonction:");
-   scanf("%s",fonction);
-   printf("\nSaisir numero de secu:");
-   scanf("%d",&nb_secu);
-<<<<<<< HEAD
-=======
-   return nb_secu;*/
->>>>>>> dde80e0c9f0efb3f65c152835b84b5fb18ac6eae
    return nb_secu;
    
 }
 
 
 
-<<<<<<< HEAD
-int creat_account(FILE*bdd)
-=======
+
 int creat_account(FILE*bdd, void* sock_fd)
->>>>>>> dde80e0c9f0efb3f65c152835b84b5fb18ac6eae
 {
    int cursor;
    int trouve = 0;
@@ -162,19 +129,15 @@ int creat_account(FILE*bdd, void* sock_fd)
 
    int nb_lignes = nb_lines(bdd);
 
-   printf("\n______CREATION DE COMPTE______\n");
+   //printf("\n______CREATION DE COMPTE______\n");
 
-<<<<<<< HEAD
-   nb_secu = ask(name,fonction,nb_secu);
-=======
    nb_secu = ask(name,fonction,nb_secu, sock_fd);
->>>>>>> dde80e0c9f0efb3f65c152835b84b5fb18ac6eae
 
    bdd = fopen("bdd.txt","r");
    while((cursor = fgetc(bdd)) != EOF)
    {
       fscanf(bdd,"%d %s %s",&verif,dust1,dust2);
-      printf("%d %s %s\n",verif,dust1,dust2);
+      //printf("%d %s %s\n",verif,dust1,dust2);
       if(verif == nb_secu)
       {
 	 trouve = 1;
@@ -307,23 +270,3 @@ void delete_account(int nb_secu,FILE* bdd)
    fclose(tmp);
    fclose(bdd);
 }
-
-
-
-/*
-int main(int argc,char **argv)
-{
-   FILE* bdd = NULL;
-   bdd = fopen("bdd.txt","a");
-   fclose(bdd);
-   int  test = creat_account(bdd);
-   test = test+1;
-   delete_account(5,bdd);
-   return EXIT_SUCCESS;
-}
-
-*/
-
-
-
-
