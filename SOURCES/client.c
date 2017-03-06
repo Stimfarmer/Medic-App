@@ -5,6 +5,7 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <fcntl.h>
+#include <openssl/ssl.h>
  
 int main(int argc , char *argv[])
 {
@@ -14,6 +15,13 @@ int main(int argc , char *argv[])
      
    //Create socket    
    sock = socket(AF_INET , SOCK_STREAM , 0);
+   SSL_CTX *ctx;
+
+   init_openssl();
+   ctx = create_context();
+
+   configure_context(ctx);
+   
    if (sock == -1)
    {
       printf("Could not create socket");
@@ -25,6 +33,9 @@ int main(int argc , char *argv[])
    server.sin_port = htons( 8888 );
  
    //Connect to remote server
+   SSL *ssl;
+   SSL_set_connect_state(ssl);
+   
    if (connect(sock , (struct sockaddr *)&server , sizeof(server)) < 0)
    {
       perror("connect failed. Error");
@@ -33,7 +44,7 @@ int main(int argc , char *argv[])
      
    puts("Connected\n");
 
-   if( recv(sock , server_reply , 2000 , 0) < 0)
+   if( SSL_read(ssl , server_reply , strlen(server_reply) < 0)
    {
        puts("recv failed");
    }

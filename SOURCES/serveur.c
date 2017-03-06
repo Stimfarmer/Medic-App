@@ -3,18 +3,23 @@
 
 
 
-/*int main(int argc , char *argv[])
+int main(int argc , char *argv[])
 {
 
    int socket_desc , client_sock , c , *new_sock;
-   SSL_CTX *sslctx;
-   SSL *cSSL;
-   InitializeSSL();
    
-   struct sockaddr_in server , client;
+   struct sockaddr_in server , client; // client correspond à addr du serveur TLS simple
+   //int sock;
+   SSL_CTX *ctx;
+
+   init_openssl();
+   ctx = create_context();
+
+   configure_context(ctx);
+   
      
    //On crée la socket
-   socket_desc = socket(AF_INET , SOCK_STREAM , 0);
+   socket_desc = socket(AF_INET , SOCK_STREAM , 0); // correspond à sock du serveur TLS simple
    if (socket_desc == -1)
    {
       printf("Impossible de créer la socket");
@@ -47,26 +52,23 @@
    //On accepte et on attend des connexions
    puts("En attente de connexion...");
    c = sizeof(struct sockaddr_in);
+   
    while( (client_sock = accept(socket_desc, (struct sockaddr *)&client, (socklen_t*)&c)) )
    {
+     printf(" \n Nouvelle connexion détéctée \n");
      pthread_t sniffer_thread;
      new_sock = malloc(1);
      *new_sock = client_sock;
      
-     sslctx = SSL_CTX_new( SSLv23_server_method() );
-     SSL_CTX_set_options(sslctx, SSL_OP_SINGLE_DH_USE);
-     int use_cert = SSL_CTX_use_certificate_file(sslctx, "/serverCertificate.pem" , SSL_FILETYPE_PEM );
-     int use_prv = SSL_CTX_use_PrivateKey_file(sslctx, "/serverCertificate.pem" , SSL_FILETYPE_PEM );
-     cSSL = SSL_new(sslctx);
-     SSL_set_fd(cSSL,new_sock);
+     //uint len = sizeof(client); // peut être changer client en client_sock 
+     SSL *ssl;
+     SSL_set_accept_state(ssl);
+     const char reply[] = "test\n";
      
-     if(ssl_err <= 0)
-     {
-       ShutdownSSL();
-     }
-     
-     SSL_write(cSSL, "Hi :3\n", 6);
-      puts("Connection acceptée");
+     printf("\n avant ssl write \n");
+     SSL_write(ssl, reply, strlen(reply));
+     printf("\n après ssl write \n");
+      //puts("Connection acceptée");
          
          
       if( pthread_create( &sniffer_thread , NULL ,  connection_handler , (void*) new_sock) < 0)
@@ -78,6 +80,18 @@
        //Now join the thread , so that we dont terminate before the thread
        //pthread_join( sniffer_thread , NULL);
        puts("Handler assigned\n");
+       ssl = SSL_new(ctx);
+       SSL_set_fd(ssl, client_sock);
+
+       if (SSL_accept(ssl) <= 0) {
+            ERR_print_errors_fp(stderr);
+       }
+       else {
+            SSL_write(ssl, reply, strlen(reply));
+       }
+
+       SSL_free(ssl);
+       close(client_sock);
    }
      
    if (client_sock < 0)
@@ -85,10 +99,16 @@
       perror("accept failed");
       return 1;
    }
+   
+   close(socket_desc);
+   SSL_CTX_free(ctx);
+   cleanup_openssl();
+   
      
    return 0;
-}*/
+}
 
+/*
 int main(int argc, char **argv)
 {
     int sock;
@@ -101,7 +121,7 @@ int main(int argc, char **argv)
 
     sock = socket(AF_INET , SOCK_STREAM , 0);
 
-    /* Handle connections */
+    // Handle connections 
     while(1) 
     {
         struct sockaddr_in addr;
@@ -110,10 +130,11 @@ int main(int argc, char **argv)
         const char reply[] = "test\n";
 
         int client = accept(sock, (struct sockaddr*)&addr, &len);
-        /*if (client < 0) {
+        if (client < 0) 
+	{
             perror("Unable to accept");
             exit(EXIT_FAILURE);
-        }*/
+        }
 
         ssl = SSL_new(ctx);
         SSL_set_fd(ssl, client);
@@ -132,4 +153,4 @@ int main(int argc, char **argv)
     close(sock);
     SSL_CTX_free(ctx);
     cleanup_openssl();
-}
+} */
