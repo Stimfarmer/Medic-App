@@ -45,3 +45,23 @@ int inscription_function( void *sock_fd)
    return 0;
 }
 
+int authentification_function( void *sock_fd)
+{
+   int sock = *(int*)sock_fd;
+   char *message;
+ 
+   message = "Veuillez remplir les champs necessaires a l'authentification\nSaisir votre login\n";
+
+   write((int)sock,message,strlen(message));
+
+   user usr;
+   FILE* bdd = NULL;
+   bdd = fopen("bdd.txt","a");
+   fclose(bdd);
+
+   inlog(usr,bdd,sock_fd);
+
+
+   return 0;
+}
+

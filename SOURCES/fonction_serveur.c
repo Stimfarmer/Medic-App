@@ -62,7 +62,7 @@ int function_to_select( void *socket_desc, char *cmd)
       printf("Authentification IN\n");
       strcat(cmd,message);
       write(sock , cmd , strlen(cmd));
-      //authentification_function(socket_desc);
+      authentification_function(socket_desc);
       printf("Authentification OUT\n");
       printf("Fonction de choix de la commande OUT\n");
       return 0;  
@@ -92,6 +92,8 @@ int function_to_select( void *socket_desc, char *cmd)
       printf("Aide IN\n");
       strcat(cmd,message);
       write(sock , cmd , strlen(cmd));
+      message = "1-\"auth\" pour vous authentifier!\n2-\"insc\" pour vous inscrire!\n3-\"help\" pour obtenir de l'aide\n4-\"quit\" pour quitter le serveur!\n";
+      write(sock, message, strlen(message));
       //affichage_aide_function(socket_desc);
       printf("Aide OUT\n");
       printf("Fonction de choix de la commande OUT\n");

@@ -10,6 +10,7 @@
 int main(int argc , char *argv[])
 {
    int sock;
+
    struct sockaddr_in server;
    char message[1000] , server_reply[2000];
      
@@ -46,11 +47,13 @@ int main(int argc , char *argv[])
    //keep communicating with server
    while(1)
    {
+      
       printf("YOU>");
+      
       fgets(message,sizeof(message),stdin);
       //scanf("%s" , message);
-      printf("Message à envoyer: %s\n",message);
       //Send some data
+
       if( send(sock , message , strlen(message) , 0) < 0)
       {
           puts("Send failed");
@@ -62,7 +65,7 @@ int main(int argc , char *argv[])
       {
           puts("recv failed");
           break;
-      } 
+      }
       delete_end_char(message,sizeof(message),message);
       if(strcmp(message,"quit") == 0)
       {
