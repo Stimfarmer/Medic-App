@@ -1,0 +1,215 @@
+\hypertarget{account_8c}{\section{account.\+c File Reference}
+\label{account_8c}\index{account.\+c@{account.\+c}}
+}
+
+
+Fonctions relatives à l'administration de compte.  
+
+
+{\ttfamily \#include $<$stdio.\+h$>$}\\*
+{\ttfamily \#include $<$stdlib.\+h$>$}\\*
+{\ttfamily \#include $<$string.\+h$>$}\\*
+{\ttfamily \#include $<$time.\+h$>$}\\*
+Include dependency graph for account.\+c\+:
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structuser}{user}
+\begin{DoxyCompactList}\small\item\em Informations relatives d'un user. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{account_8c_a4d9b13ef480e2200c01a80db0ee0abe3}{init\+\_\+user} (\hyperlink{structuser}{user} usr)
+\begin{DoxyCompactList}\small\item\em Fonction initialisant un user. \end{DoxyCompactList}\item 
+\hyperlink{structuser}{user} \hyperlink{account_8c_a76f42e5588c89f5ea29dd1c02fef2bae}{alloc\+\_\+user} (\hyperlink{structuser}{user} usr)
+\begin{DoxyCompactList}\small\item\em Fonction allouant les char$\ast$ de la structure user. \end{DoxyCompactList}\item 
+void \hyperlink{account_8c_abe9a7ef099f567b8c0ca70784643447a}{desalloc\+\_\+user} (\hyperlink{structuser}{user} usr)
+\begin{DoxyCompactList}\small\item\em Fonction desallouant un user. \end{DoxyCompactList}\item 
+int \hyperlink{account_8c_a2ab9be8c126ebe7da1268ed034e53c10}{nb\+\_\+lines} (F\+I\+L\+E $\ast$bdd)
+\begin{DoxyCompactList}\small\item\em Fonction calculant le nombre de ligne d'un fichier passé en paramètre. \end{DoxyCompactList}\item 
+int \hyperlink{account_8c_a81e1231d275dd0611250873d0701047b}{ask} (\hyperlink{structuser}{user} usr)
+\begin{DoxyCompactList}\small\item\em Fonction demandant la saisie d'info pour un user. \end{DoxyCompactList}\item 
+int \hyperlink{account_8c_a1488b4baba62480d79dfd52821862d5d}{inlog} (\hyperlink{structuser}{user} usr, F\+I\+L\+E $\ast$bdd)
+\begin{DoxyCompactList}\small\item\em Fonction permettant à un user de se connecter. \end{DoxyCompactList}\item 
+int \hyperlink{account_8c_a24be9b3116ede77efe66c640802d81f8}{creat\+\_\+account} (F\+I\+L\+E $\ast$bdd)
+\begin{DoxyCompactList}\small\item\em Fonction permettant la création d'un compte. \end{DoxyCompactList}\item 
+void \hyperlink{account_8c_a5623c9f8709440e85c0639d0996c7757}{delete\+\_\+account} (int nb\+\_\+secu, F\+I\+L\+E $\ast$bdd)
+\begin{DoxyCompactList}\small\item\em Fonction permettant la suppréssion d'un compte de la bdd. \end{DoxyCompactList}\item 
+\hypertarget{account_8c_a3c04138a5bfe5d72780bb7e82a18e627}{int {\bfseries main} (int argc, char $\ast$$\ast$argv)}\label{account_8c_a3c04138a5bfe5d72780bb7e82a18e627}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Fonctions relatives à l'administration de compte. 
+
+\begin{DoxyAuthor}{Author}
+J\+Jaouen 
+\end{DoxyAuthor}
+\begin{DoxyVersion}{Version}
+1.\+0 
+\end{DoxyVersion}
+\begin{DoxyDate}{Date}
+07/03/2017 
+\end{DoxyDate}
+
+
+\subsection{Function Documentation}
+\hypertarget{account_8c_a76f42e5588c89f5ea29dd1c02fef2bae}{\index{account.\+c@{account.\+c}!alloc\+\_\+user@{alloc\+\_\+user}}
+\index{alloc\+\_\+user@{alloc\+\_\+user}!account.\+c@{account.\+c}}
+\subsubsection[{alloc\+\_\+user}]{\setlength{\rightskip}{0pt plus 5cm}{\bf user} alloc\+\_\+user (
+\begin{DoxyParamCaption}
+\item[{{\bf user}}]{usr}
+\end{DoxyParamCaption}
+)}}\label{account_8c_a76f42e5588c89f5ea29dd1c02fef2bae}
+
+
+Fonction allouant les char$\ast$ de la structure user. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em usr} & user a allouer \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+retourne un user 
+\end{DoxyReturn}
+\hypertarget{account_8c_a81e1231d275dd0611250873d0701047b}{\index{account.\+c@{account.\+c}!ask@{ask}}
+\index{ask@{ask}!account.\+c@{account.\+c}}
+\subsubsection[{ask}]{\setlength{\rightskip}{0pt plus 5cm}int ask (
+\begin{DoxyParamCaption}
+\item[{{\bf user}}]{usr}
+\end{DoxyParamCaption}
+)}}\label{account_8c_a81e1231d275dd0611250873d0701047b}
+
+
+Fonction demandant la saisie d'info pour un user. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em usr} & user que l'on veut créer \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+retourne le numero de secu du user 
+\end{DoxyReturn}
+\hypertarget{account_8c_a24be9b3116ede77efe66c640802d81f8}{\index{account.\+c@{account.\+c}!creat\+\_\+account@{creat\+\_\+account}}
+\index{creat\+\_\+account@{creat\+\_\+account}!account.\+c@{account.\+c}}
+\subsubsection[{creat\+\_\+account}]{\setlength{\rightskip}{0pt plus 5cm}int creat\+\_\+account (
+\begin{DoxyParamCaption}
+\item[{F\+I\+L\+E $\ast$}]{bdd}
+\end{DoxyParamCaption}
+)}}\label{account_8c_a24be9b3116ede77efe66c640802d81f8}
+
+
+Fonction permettant la création d'un compte. 
+
+la fonction verifie si le nouveau compte n'existe pas déjà, sinon, elle place le compte au bon endroit dans la bdd (triée en fonction du nb\+\_\+secu) 
+\begin{DoxyParams}{Parameters}
+{\em bdd} & base de donnée recueillant les comptes \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+retourne -\/1 si le compte existe déjà, 0 sinon 
+\end{DoxyReturn}
+\hypertarget{account_8c_a5623c9f8709440e85c0639d0996c7757}{\index{account.\+c@{account.\+c}!delete\+\_\+account@{delete\+\_\+account}}
+\index{delete\+\_\+account@{delete\+\_\+account}!account.\+c@{account.\+c}}
+\subsubsection[{delete\+\_\+account}]{\setlength{\rightskip}{0pt plus 5cm}void delete\+\_\+account (
+\begin{DoxyParamCaption}
+\item[{int}]{nb\+\_\+secu, }
+\item[{F\+I\+L\+E $\ast$}]{bdd}
+\end{DoxyParamCaption}
+)}}\label{account_8c_a5623c9f8709440e85c0639d0996c7757}
+
+
+Fonction permettant la suppréssion d'un compte de la bdd. 
+
+verifie si les infos sont bien contenues dans la bdd 
+\begin{DoxyParams}{Parameters}
+{\em nb\+\_\+secu} & numero de secu du compte que l'on veut supprimer \\
+\hline
+{\em bdd} & base de donnée contenant les comptes \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+ne retourne rien 
+\end{DoxyReturn}
+\hypertarget{account_8c_abe9a7ef099f567b8c0ca70784643447a}{\index{account.\+c@{account.\+c}!desalloc\+\_\+user@{desalloc\+\_\+user}}
+\index{desalloc\+\_\+user@{desalloc\+\_\+user}!account.\+c@{account.\+c}}
+\subsubsection[{desalloc\+\_\+user}]{\setlength{\rightskip}{0pt plus 5cm}void desalloc\+\_\+user (
+\begin{DoxyParamCaption}
+\item[{{\bf user}}]{usr}
+\end{DoxyParamCaption}
+)}}\label{account_8c_abe9a7ef099f567b8c0ca70784643447a}
+
+
+Fonction desallouant un user. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em usr} & user a desallouer \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+ne renvoie rien 
+\end{DoxyReturn}
+\hypertarget{account_8c_a4d9b13ef480e2200c01a80db0ee0abe3}{\index{account.\+c@{account.\+c}!init\+\_\+user@{init\+\_\+user}}
+\index{init\+\_\+user@{init\+\_\+user}!account.\+c@{account.\+c}}
+\subsubsection[{init\+\_\+user}]{\setlength{\rightskip}{0pt plus 5cm}void init\+\_\+user (
+\begin{DoxyParamCaption}
+\item[{{\bf user}}]{usr}
+\end{DoxyParamCaption}
+)}}\label{account_8c_a4d9b13ef480e2200c01a80db0ee0abe3}
+
+
+Fonction initialisant un user. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em usr} & user a initialiser \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+retourne le user initialisé 
+\end{DoxyReturn}
+\hypertarget{account_8c_a1488b4baba62480d79dfd52821862d5d}{\index{account.\+c@{account.\+c}!inlog@{inlog}}
+\index{inlog@{inlog}!account.\+c@{account.\+c}}
+\subsubsection[{inlog}]{\setlength{\rightskip}{0pt plus 5cm}int inlog (
+\begin{DoxyParamCaption}
+\item[{{\bf user}}]{usr, }
+\item[{F\+I\+L\+E $\ast$}]{bdd}
+\end{DoxyParamCaption}
+)}}\label{account_8c_a1488b4baba62480d79dfd52821862d5d}
+
+
+Fonction permettant à un user de se connecter. 
+
+L'utilisateur rentre ses login / mdp, s'ils sont présents dans la bdd, il est connecté 
+\begin{DoxyParams}{Parameters}
+{\em usr} & user qui souhaite se connecter \\
+\hline
+{\em bdd} & base de donnée contenant les mdp / login \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+retourne 0 si connecté, -\/1 sinon 
+\end{DoxyReturn}
+\hypertarget{account_8c_a2ab9be8c126ebe7da1268ed034e53c10}{\index{account.\+c@{account.\+c}!nb\+\_\+lines@{nb\+\_\+lines}}
+\index{nb\+\_\+lines@{nb\+\_\+lines}!account.\+c@{account.\+c}}
+\subsubsection[{nb\+\_\+lines}]{\setlength{\rightskip}{0pt plus 5cm}int nb\+\_\+lines (
+\begin{DoxyParamCaption}
+\item[{F\+I\+L\+E $\ast$}]{bdd}
+\end{DoxyParamCaption}
+)}}\label{account_8c_a2ab9be8c126ebe7da1268ed034e53c10}
+
+
+Fonction calculant le nombre de ligne d'un fichier passé en paramètre. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em bdd} & fichier dont on veut connaître le nbre de ligne \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+retourne le nbre de ligne du fichier 
+\end{DoxyReturn}
