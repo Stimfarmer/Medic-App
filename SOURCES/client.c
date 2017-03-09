@@ -5,6 +5,7 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <fcntl.h>
+#include "chaine.h"
  
 int main(int argc , char *argv[])
 {
@@ -46,8 +47,9 @@ int main(int argc , char *argv[])
    while(1)
    {
       printf("YOU>");
-      scanf("%s" , message);
-      
+      fgets(message,sizeof(message),stdin);
+      //scanf("%s" , message);
+      printf("Message à envoyer: %s\n",message);
       //Send some data
       if( send(sock , message , strlen(message) , 0) < 0)
       {
@@ -61,7 +63,7 @@ int main(int argc , char *argv[])
           puts("recv failed");
           break;
       } 
-
+      delete_end_char(message,sizeof(message),message);
       if(strcmp(message,"quit") == 0)
       {
          printf("Deconnexion...\n");

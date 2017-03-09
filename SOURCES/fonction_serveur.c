@@ -46,9 +46,12 @@ int function_to_select( void *socket_desc, char *cmd)
    printf("Fonction de choix de la commande IN\n");
 
    char *message;
+   char *cmd_f;
+   char commande_f[50];
    int error;
    int sock = *(int*)socket_desc;
    message = " est votre commande\n";
+   strcpy(commande_f ,cmd);
    
    if(strcmp(cmd,"auth") == 0)
    {
@@ -101,9 +104,45 @@ int function_to_select( void *socket_desc, char *cmd)
       return 0;
    }
    else
-      printf("Commande non valide\n");
-      message = "Entrez une commande valide...\n";
-      write(sock, message, strlen(message));
+      cmd_f = strtok(cmd," ");
+
+      if(strcmp(cmd_f,"ls") == 0)
+      {
+         printf("Ls serveur\n");
+         system(commande_f);
+      }
+      else if(strcmp(cmd_f,"mkdir") == 0)
+      {
+         printf("Mkdir serveur\n");
+         system(commande_f);
+      }
+      else if(strcmp(cmd_f,"cd") == 0)
+      {
+         printf("Cd serveur\n");
+         system(commande_f);
+      }
+      else if(strcmp(cmd_f,"rm") == 0)
+      {
+         printf("Rm serveur\n");
+         system(commande_f);
+      }
+      else if(strcmp(cmd_f,"cp") == 0)
+      {
+         printf("Cp serveur\n");
+         system(commande_f);
+      }
+      else if(strcmp(cmd_f,"touch") == 0)
+      {
+         printf("Touch serveur\n");
+         system(commande_f);
+      }
+      else if(strcmp(cmd_f,"vim") == 0)
+      {
+         printf("Vim serveur\n");
+         system(commande_f);
+      }
+      strcat(commande_f,message);
+      write(sock , commande_f , strlen(commande_f));
       printf("Fonction de choix de la commande OUT\n");
       return -1;
 
