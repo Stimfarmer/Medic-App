@@ -127,12 +127,28 @@ int ask(user usr)
    scanf("%d",&usr.nb_secu);
    printf("\nSaisir mdp:");
    scanf("%s",usr.mdp);
+   
 
-   usr.login[0] = usr.surname[0]+32;
+   if(usr.surname[0]>64 && usr.surname[0]<91)
+   {   
+      usr.login[0] = usr.surname[0]+32;
+   }
+   if(usr.surname[0]>96 && usr.surname[0]<123)
+   {
+      usr.login[0] = usr.surname[0];
+   }
+
    int i;
    for(i=1;i<=7;i++)
    {
-      usr.login[i] = usr.name[i-1]+32;
+      if(usr.name[i-1]>64 && usr.name[i-1]<91)
+      {
+	 usr.login[i] = usr.name[i-1]+32;
+      }
+      if(usr.name[i-1]>96 && usr.name[i-1]<123)
+      {
+	 usr.login[i] = usr.name[i-1];
+      }
    }
 
    return usr.nb_secu;
@@ -381,24 +397,23 @@ void delete_account(int nb_secu,FILE* bdd)
 }
 
 
-/*
+
 
 int main(int argc,char **argv)
 {
    user usr;
- //  alloc_user(usr);
    FILE* bdd = NULL;
    bdd = fopen("bdd.txt","a");
    fclose(bdd);
- //int  test = creat_account(bdd);
-// test = test+1;
- //  delete_account(7,bdd);
+   int  test = creat_account(bdd);
+   test = test+1;
+ //delete_account(7,bdd);
    int result = inlog(usr,bdd);
    result = result +1;
    return EXIT_SUCCESS;
 }
 
-*/
+
 
 
 
