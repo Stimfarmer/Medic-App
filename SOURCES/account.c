@@ -397,7 +397,7 @@ void delete_account(int nb_secu,FILE* bdd)
 }
 
 
-
+/*
 
 int main(int argc,char **argv)
 {
@@ -412,7 +412,7 @@ int main(int argc,char **argv)
    result = result +1;
    return EXIT_SUCCESS;
 }
-
+*/
 
 
 
