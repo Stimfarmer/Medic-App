@@ -9,6 +9,7 @@ void *connection_handler(void *socket_desc)
    int read_size;
    char *message ,client_message[2000];
    char commande[100];
+
      
    //On envoie quelques informations au client
    message = "Bonjour, je suis le thread qui te gere!\n1-\"auth\" pour vous authentifier!\n2-\"insc\" pour vous inscrire!\n3-\"help\" pour obtenir de l'aide\n4-\"quit\" pour quitter le serveur!\n";
@@ -46,7 +47,10 @@ int function_to_select( void *socket_desc, char *cmd)
    printf("Fonction de choix de la commande IN\n");
 
    char *message;
+   char cat[2048];
    char *cmd_f;
+   FILE *to_send;
+   char buf[1024];
    char commande_f[50];
    int error;
    int sock = *(int*)socket_desc;
@@ -109,7 +113,21 @@ int function_to_select( void *socket_desc, char *cmd)
       if(strcmp(cmd_f,"ls") == 0)
       {
          printf("Ls serveur\n");
-         system(commande_f);
+         //system(commande_f);
+         if (( to_send = popen(commande_f, "r")) == NULL)
+         {
+            perror("popen");
+            exit(1);
+         }
+         while(fgets(buf, sizeof(buf), to_send))
+         {
+            strcat(cat,buf);
+            
+         }
+         write(sock, cat, sizeof(cat));
+         
+         pclose(to_send);
+         
       }
       else if(strcmp(cmd_f,"mkdir") == 0)
       {
@@ -144,6 +162,7 @@ int function_to_select( void *socket_desc, char *cmd)
       strcat(commande_f,message);
       write(sock , commande_f , strlen(commande_f));
       printf("Fonction de choix de la commande OUT\n");
+      bzero(cat,2048);
       return -1;
 
 }
