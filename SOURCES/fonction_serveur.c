@@ -4,11 +4,11 @@
 #include <openssl/bio.h>
 #include <openssl/conf.h>
 #include <openssl/evp.h>
-#include <openssl/ssl.h>
-#include <openssl/err.h>
+//#include <openssl/ssl.h>
+//#include <openssl/err.h>
 
 
-void *connection_handler(void *socket_desc)
+/*void *connection_handler(void *socket_desc)
 {
    //On récupère le numéro de descripteur de la socket
    int sock = *(int*)socket_desc;
@@ -46,80 +46,23 @@ void *connection_handler(void *socket_desc)
      
    return 0;
 }
+*/
 
 
 
-void init_openssl()
-{
-  SSL_load_error_strings();
-  OpenSSL_add_ssl_algorithms();
-}
-
-
-void cleanup_openssl()
-{
-  EVP_cleanup();
-}
-
-
-SSL_CTX *create_context()
-{
-  const SSL_METHOD *method;
-  SSL_CTX *ctx;
-  
-  method = SSLv23_server_method();
-  
-  ctx = SSL_CTX_new(method);
-  if(!ctx)
-  {
-    perror("Impossible de créer le contexte SSL");
-    ERR_print_errors_fp(stderr);
-    exit(EXIT_FAILURE);
-  }
-  
-  return ctx;
-}
-
-
-void configure_context(SSL_CTX *ctx)
-{
-  //SSL_CTX_set_ecdh_auto(ctx, 1);
-  
-  // Définition de la clé et du certificat
-  
-  if (SSL_CTX_use_certificate_file(ctx, "cert.pem", SSL_FILETYPE_PEM) < 0)
-  {
-    ERR_print_errors_fp(stderr);
-    exit(EXIT_FAILURE);
-  }
-  
-  if (SSL_CTX_use_PrivateKey_file(ctx, "key.pem", SSL_FILETYPE_PEM) < 0)
-  {
-    ERR_print_errors_fp(stderr);
-    exit(EXIT_FAILURE);
-  }
-  
-}
-
-  
-
-
-
-
-
-int function_to_select( void *socket_desc, char *cmd)
+int function_to_select(SSL *ssl, char *cmd)
 {
    printf("Fonction de choix de la commande\n");
 
    char *message;
-   int sock = *(int*)socket_desc;
+   //int sock = *(int*)socket_desc;
    message = " est votre commande\n";
    
    if(strcmp(cmd,"auth") == 0)
    {
       printf("Authentification\n");
       strcat(cmd,message);
-      write(sock , cmd , strlen(cmd));
+      SSL_write(ssl , cmd , strlen(cmd));
       //authentification_function(socket_desc);
       return 0;  
    }
@@ -127,7 +70,7 @@ int function_to_select( void *socket_desc, char *cmd)
    {
       printf("Inscription\n");
       strcat(cmd,message);
-      write(sock , cmd , strlen(cmd));
+      SSL_write(ssl , cmd , strlen(cmd));
       //inscription_function(socket_desc);
       return 0;
    }
@@ -135,7 +78,7 @@ int function_to_select( void *socket_desc, char *cmd)
    {
       printf("Aide\n");
       strcat(cmd,message);
-      write(sock , cmd , strlen(cmd));
+      SSL_write(ssl , cmd , strlen(cmd));
       //affichage_aide_function(socket_desc);
       return 0;
    }
@@ -143,14 +86,14 @@ int function_to_select( void *socket_desc, char *cmd)
    {
       printf("Quitter\n");
       strcat(cmd,message);
-      write(sock , cmd , strlen(cmd));
-      quit_function(socket_desc);
+      SSL_write(ssl , cmd , strlen(cmd));
+      //quit_function(socket_desc);
       return 0;
    }
    else
       printf("Commande non valide\n");
       message = "Entrez une commande valide...\n";
-      write(sock, message, strlen(message));
+      SSL_write(ssl, message, strlen(message));
       return -1;
 
 }
