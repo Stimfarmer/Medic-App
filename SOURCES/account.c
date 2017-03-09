@@ -1,3 +1,5 @@
+#include "account.h"
+#include "chaine.h"
 /**
 * \file account.c
 * \author JJaouen
@@ -14,23 +16,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-
-/**
-* \brief Informations relatives d'un user
-*/
-
-
-
-typedef struct{
-   char *name ;
-   char *surname ;
-   char *fonction;
-   int nb_secu;
-   char *mdp;
-   char *login;
-   char *year;
-} user;
-
 
 
 /**
@@ -80,11 +65,7 @@ void desalloc_user(user usr)
    free(usr.year);
 }
 
-/**
-* \brief Fonction calculant le nombre de ligne d'un fichier passé en paramètre
-* \param bdd fichier dont on veut connaître le nbre de ligne
-* \return retourne le nbre de ligne du fichier
-*/
+
 int nb_lines(FILE* bdd)
 {
    int cursor = 0;
@@ -110,26 +91,105 @@ int nb_lines(FILE* bdd)
    fclose(bdd);
    return nb_lignes;
 }
-/**
-* \brief Fonction demandant la saisie d'info pour un user
-* \param usr user que l'on veut créer
-* \return retourne le numero de secu du user
-*/
-int ask(user usr)
-{
-   printf("Saisir nom:");
-   scanf("%s",usr.name);
-   printf("\nSaisir prénom:");
-   scanf("%s",usr.surname);
-   printf("\nSaisir fonction:");
-   scanf("%s",usr.fonction);
-   printf("\nSaisir numero de secu:");
-   scanf("%d",&usr.nb_secu);
-   printf("\nSaisir mdp:");
-   scanf("%s",usr.mdp);
-   
 
-   if(usr.surname[0]>64 && usr.surname[0]<91)
+int ask(user usr, void *sock_fd)
+{
+   char *message ,client_message[2000],msg[100];
+   int sock = *(int*)sock_fd;
+   int read_size;
+   
+   read_size = recv(sock , client_message , sizeof(client_message) , 0);
+
+   if((delete_end_char(msg,sizeof(msg),client_message))==-1)
+   {
+      perror("Erreur supression caractère de fin!");
+      return -1;
+   }
+
+   strcpy(usr.name,msg);
+
+   printf("Name:%s\n",usr.name);  
+
+   bzero(client_message,2000);
+   bzero(msg,100);
+
+   message = "Saisir votre surname\n";
+
+   write((int)sock,message,strlen(message));
+
+   read_size = recv(sock , client_message , sizeof(client_message) , 0);
+
+   if((delete_end_char(msg,sizeof(msg),client_message))==-1)
+   {
+      perror("Erreur supression caractère de fin!");
+      return -1;
+   }
+
+   strcpy(usr.surname,msg);
+
+   printf("Surname:%s\n",usr.surname);  
+
+   bzero(client_message,2000);
+   bzero(msg,100);
+
+   message = "Saisir votre fonction\n";
+
+   write((int)sock,message,strlen(message));
+
+   read_size = recv(sock , client_message , sizeof(client_message) , 0);
+
+   if((delete_end_char(msg,sizeof(msg),client_message))==-1)
+   {
+      perror("Erreur supression caractère de fin!");
+      return -1;
+   }
+
+   strcpy(usr.fonction,msg);
+
+   printf("Fonction:%s\n",usr.fonction);
+
+   bzero(client_message,2000);
+   bzero(msg,100);
+
+   message = "Saisir votre numero de secu\n";
+
+   write((int)sock,message,strlen(message));
+
+   read_size = recv(sock , client_message , sizeof(client_message) , 0);
+
+   if((delete_end_char(msg,sizeof(msg),client_message))==-1)
+      {
+         perror("Erreur supression caractère de fin!");
+         return -1;
+      }
+
+   usr.nb_secu = atoi(msg);
+
+   printf("Nb_secu:%i\n",usr.nb_secu);
+
+   bzero(client_message,2000);
+   bzero(msg,100);
+
+   message = "Saisir votre mdp\n";
+
+   write((int)sock,message,strlen(message));
+
+   read_size = recv(sock , client_message , sizeof(client_message) , 0);
+
+   if((delete_end_char(msg,sizeof(msg),client_message))==-1)
+   {
+      perror("Erreur supression caractère de fin!");
+      return -1;
+   }
+
+   strcpy(usr.mdp,msg);
+
+   printf("Mdp:%s\n",usr.mdp);  
+
+   bzero(client_message,2000);
+   bzero(msg,100);
+
+      if(usr.surname[0]>64 && usr.surname[0]<91)
    {   
       usr.login[0] = usr.surname[0]+32;
    }
@@ -151,33 +211,66 @@ int ask(user usr)
       }
    }
 
+   read_size++;
+
    return usr.nb_secu;
-   
 }
 
 
-/**
-* \brief Fonction permettant à un user de se connecter
-* \details L'utilisateur rentre ses login / mdp, s'ils sont présents dans la bdd, il est connecté
-* \param usr user qui souhaite se connecter
-* \param bdd base de donnée contenant les mdp / login
-* \return retourne 0 si connecté, -1 sinon
-*/
 
-int inlog(user usr,FILE* bdd)
+int inlog(user usr,FILE* bdd, void* sock_fd)
 {
    char *log = malloc(20*sizeof(char));
    char *mdp = malloc(20*sizeof(char));
+   int sock = *(int*)sock_fd;
+   //char rep[200];
+   char *message ,client_message[2000],msg[100];
+   int read_size;
  
    usr = alloc_user(usr);
  
    int cursor;
    bdd = fopen("bdd.txt","r");
 
-   printf("\nLogin:");
+   read_size = recv(sock , client_message , sizeof(client_message) , 0);
+
+   if((delete_end_char(msg,sizeof(msg),client_message))==-1)
+   {
+      perror("Erreur supression caractère de fin!");
+      return -1;
+   }
+
+   strcpy(usr.login,msg);
+
+   printf("Login:%s\n",usr.login);  
+
+   bzero(client_message,2000);
+   bzero(msg,100);
+
+   message = "Saisir votre mdp\n";
+
+   write((int)sock,message,strlen(message));
+
+   read_size = recv(sock , client_message , sizeof(client_message) , 0);
+
+   if((delete_end_char(msg,sizeof(msg),client_message))==-1)
+   {
+      perror("Erreur supression caractère de fin!");
+      return -1;
+   }
+
+   strcpy(usr.mdp,msg);
+
+   printf("Mdp:%s\n",usr.mdp);
+
+   bzero(client_message,2000);
+   bzero(msg,100);
+
+   /*printf("\nLogin:");
    scanf("%s",usr.login);
    printf("\nMdp:");
    scanf("%s",usr.mdp);
+   */
    
 
    while((cursor =fgetc(bdd)) != EOF)
@@ -186,30 +279,34 @@ int inlog(user usr,FILE* bdd)
       if(strcmp(log,usr.login)==0 && strcmp(mdp,usr.mdp) == 0)
       {
 	 printf("\nLOG IN SUCCESS\n");
+	 message = "\nLog as ";
+         write((int)sock,message,strlen(message));
+         write((int)sock,usr.login,strlen(usr.login));
+	 message = "\n";
+         write((int)sock,message,strlen(message));
 	 return 0;
       }
    }
 
    printf("\nERREUR MDP OR LOG\n");
+   message = "\nERREUR MDP OR LOG\n";
 
+   write((int)sock,message,strlen(message));
    fclose(bdd);
    desalloc_user(usr);
    free(log);
    free(mdp);
+
+   read_size++;
    return -1;
 
 }
 
 
-/**
-* \brief Fonction permettant la création d'un compte
-* \details la fonction verifie si le nouveau compte n'existe pas déjà, sinon, elle place le compte au bon endroit dans la bdd (triée en fonction du nb_secu)
-* \param bdd base de donnée recueillant les comptes
-* \return retourne -1 si le compte existe déjà, 0 sinon
-*/
 
 
-int creat_account(FILE*bdd)
+
+int creat_account(FILE*bdd, void* sock_fd)
 {
    int cursor;
    int trouve = 0;
@@ -241,14 +338,15 @@ int creat_account(FILE*bdd)
 
    int nb_lignes = nb_lines(bdd);
 
-   printf("\n______CREATION DE COMPTE______\n");
+   //printf("\n______CREATION DE COMPTE______\n");
 
-   nb_secu = ask(usr);
+   nb_secu = ask(usr, sock_fd);
 
    bdd = fopen("bdd.txt","r");
    while((cursor = fgetc(bdd)) != EOF)
    {
       fscanf(bdd,"%d %s %s %s %s %s %s",&verif,dust1,dust2,dust3,dust4,dust5,dust6);
+
       if(verif == nb_secu)
       {
          trouve = 1;
@@ -320,13 +418,6 @@ int creat_account(FILE*bdd)
    return 0; 
 }
 
-/**
-* \brief Fonction permettant la suppréssion d'un compte de la bdd
-* \details verifie si les infos sont bien contenues dans la bdd
-* \param nb_secu numero de secu du compte que l'on veut supprimer
-* \param bdd base de donnée contenant les comptes
-* \return ne retourne rien
-*/
 
 
 void delete_account(int nb_secu,FILE* bdd)
@@ -395,26 +486,3 @@ void delete_account(int nb_secu,FILE* bdd)
    fclose(tmp);
    fclose(bdd);
 }
-
-
-/*
-
-int main(int argc,char **argv)
-{
-   user usr;
-   FILE* bdd = NULL;
-   bdd = fopen("bdd.txt","a");
-   fclose(bdd);
-   int  test = creat_account(bdd);
-   test = test+1;
- //delete_account(7,bdd);
-   int result = inlog(usr,bdd);
-   result = result +1;
-   return EXIT_SUCCESS;
-}
-*/
-
-
-
-
-
