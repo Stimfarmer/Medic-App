@@ -433,7 +433,8 @@ void delete_account(int nb_secu,FILE* bdd)
    char *dust3 = malloc(20*sizeof(char));
    char *dust4 = malloc(20*sizeof(char));
    char *dust5 = malloc(20*sizeof(char));
-
+   char *dust6 = malloc(20*sizeof(char));
+   
    bdd = fopen("bdd.txt","r");
    FILE * tmp = NULL;
    tmp = fopen("tmp.txt","a");
@@ -443,7 +444,7 @@ void delete_account(int nb_secu,FILE* bdd)
 
    while((cursor = fgetc(bdd)) != EOF)
    {  
-      fscanf(bdd,"%d %s %s %s %s %s",&verif,dust1,dust2,dust3,dust4,dust5);
+      fscanf(bdd,"%d %s %s %s %s %s %s",&verif,dust1,dust2,dust3,dust4,dust5,dust6);
 
       if(verif == nb_secu)
       {
@@ -454,7 +455,7 @@ void delete_account(int nb_secu,FILE* bdd)
       {
          if(cmp <nb_lignes )
          {
-            fprintf(tmp," %d %s %s %s %s %s\n",verif,dust1,dust2,dust3,dust4,dust5);
+            fprintf(tmp," %d %s %s %s %s %s %s\n",verif,dust1,dust2,dust3,dust4,dust5,dust6);
          }
       }
       cmp++;
