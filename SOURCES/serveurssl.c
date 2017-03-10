@@ -114,7 +114,7 @@ void ShowCerts(SSL* ssl)
         printf("Client simple sans certificat\n");
 }
  
-void Servlet(SSL* ssl) /* Serve the connection -- threadable */
+void Servlet(SSL* ssl) /* Serve the connection -- threadable */ // succède à "connection_handler"
 {   char buf[1024];
     char cmd[200];
     char reply[1024];
@@ -126,22 +126,23 @@ void Servlet(SSL* ssl) /* Serve the connection -- threadable */
     else
     {
         ShowCerts(ssl);        /* get any certificates */
-        bytes = SSL_read(ssl, buf, sizeof(buf)); /* get request */ // chercher le segfault ici
-        while( bytes > 0)
+        //bytes = SSL_read(ssl, buf, sizeof(buf)); /* get request */ // chercher le segfault ici
+        do
 	{
+	  bytes = SSL_read(ssl, buf, sizeof(buf));
 	  if ( bytes > 0 )
 	  {
 	      buf[bytes] = 0;
 	      printf("Client msg: \"%s\"\n", buf);
-	      sprintf(reply, "reçu \n", buf);   /* construct reply */
-	      SSL_write(ssl, reply, strlen(reply)); /* send reply */
-	      bytes = SSL_read(ssl, buf, sizeof(buf));
+	      //sprintf(reply, "reçu \n", buf);   /* construct reply */
+	      //SSL_write(ssl, reply, strlen(reply)); /* send reply */
 	      if((delete_end_char(cmd,sizeof(cmd),buf))==-1)
 	      {
 		perror("Erreur supression caractère de fin!");
 		break;
 	      }
 	      function_to_select(ssl, cmd);
+	      //bytes = SSL_read(ssl, buf, sizeof(buf));
 	  }
 	  else
 	  {
@@ -152,6 +153,7 @@ void Servlet(SSL* ssl) /* Serve the connection -- threadable */
 	  bzero(cmd,200);
 	      
 	}
+	while(bytes > 0);
     }
     sd = SSL_get_fd(ssl);       /* get socket connection */
     SSL_free(ssl);         /* release SSL state */
