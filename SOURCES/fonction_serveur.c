@@ -1,8 +1,14 @@
 #include "fonction_serveur.h"
 #include "fonction_client_on_serveur.h"
 #include "chaine.h"
+#include <openssl/bio.h>
+#include <openssl/conf.h>
+#include <openssl/evp.h>
+//#include <openssl/ssl.h>
+//#include <openssl/err.h>
 
-void *connection_handler(void *socket_desc)
+
+/*void *connection_handler(void *socket_desc)
 {
    //On récupère le numéro de descripteur de la socket
    int sock = *(int*)socket_desc;
@@ -41,26 +47,31 @@ void *connection_handler(void *socket_desc)
      
    return 0;
 }
+*/
 
-int function_to_select( void *socket_desc, char *cmd)
+
+
+int function_to_select(SSL *ssl, char *cmd)
 {
    printf("Fonction de choix de la commande IN\n");
 
    char *message;
+
    char cat[2048];
    char *cmd_f;
    FILE *to_send;
    char buf[1024];
    char commande_f[50];
    int error;
-   int sock = *(int*)socket_desc;
+  
+
    message = " est votre commande\n";
    strcpy(commande_f ,cmd);
    
    if(strcmp(cmd,"") == 0)
    {
       message = "Aucune commande saisie.\nEntrez une commande valide.\n";
-      write(sock,message,strlen(message));
+      SSL_write(ssl , message , strlen(message));
       printf("Fonction de choix de la commande OUT\n");
       return -1;
    }
@@ -69,39 +80,52 @@ int function_to_select( void *socket_desc, char *cmd)
    {
       printf("Authentification IN\n");
       strcat(cmd,message);
-      write(sock , cmd , strlen(cmd));
-      authentification_function(socket_desc);
+
+      SSL_write(ssl , cmd , strlen(cmd));
+      //authentification_function(socket_desc);
+
+      authentification_function(ssl);
       printf("Authentification OUT\n");
       printf("Fonction de choix de la commande OUT\n");
+
       return 0;  
    }
    else if(strcmp(cmd,"insc") == 0)
    {
       printf("Inscription IN\n");
       strcat(cmd,message);
-      write(sock , cmd , strlen(cmd));
-      error = inscription_function(socket_desc);
+
+      SSL_write(ssl , cmd , strlen(cmd));
+      //inscription_function(socket_desc);
+
+
+      error = inscription_function(ssl);
       if(error == -1)
       {
          message = "Inscription impossible, compte existant!\n";
-         write(sock, message, strlen(message));
+         SSL_write(ssl , message , strlen(message));
          printf("Inscription OUT\n");
          printf("Fonction de choix de la commande OUT\n");
          return -1;
       }
       message = "Inscription realisee avec succes!\n";
-      write(sock, message, strlen(message));
+      SSL_write(ssl , message , strlen(message));
       printf("Inscription OUT\n");
       printf("Fonction de choix de la commande OUT\n");
+
       return 0;
    }
    else if(strcmp(cmd,"help") == 0)
    {
       printf("Aide IN\n");
       strcat(cmd,message);
-      write(sock , cmd , strlen(cmd));
+
+      SSL_write(ssl , cmd , strlen(cmd));
+
+
       message = "1-\"auth\" pour vous authentifier!\n2-\"insc\" pour vous inscrire!\n3-\"help\" pour obtenir de l'aide\n4-\"quit\" pour quitter le serveur!\n";
-      write(sock, message, strlen(message));
+      SSL_write(ssl , message , strlen(message));
+
       //affichage_aide_function(socket_desc);
       printf("Aide OUT\n");
       printf("Fonction de choix de la commande OUT\n");
@@ -111,8 +135,9 @@ int function_to_select( void *socket_desc, char *cmd)
    {
       printf("Quitter IN\n");
       strcat(cmd,message);
-      write(sock , cmd , strlen(cmd));
-      quit_function(socket_desc);
+
+      SSL_write(ssl , cmd , strlen(cmd));
+      quit_function(ssl);
       printf("Quitter OUT\n");
       printf("Fonction de choix de la commande OUT\n");
       return 0;
@@ -134,7 +159,7 @@ int function_to_select( void *socket_desc, char *cmd)
             strcat(cat,buf);
             
          }
-         write(sock, cat, sizeof(cat));
+         SSL_write(ssl , cat , strlen(cat));
          
          pclose(to_send);
          
@@ -144,7 +169,7 @@ int function_to_select( void *socket_desc, char *cmd)
          printf("Mkdir serveur\n");
          message = "Fichier créé\n";
          system(commande_f);
-         write(sock , message , strlen(message));
+         SSL_write(ssl , message , strlen(message));
       }
       else if(strcmp(cmd_f,"cd") == 0)
       {
@@ -172,11 +197,12 @@ int function_to_select( void *socket_desc, char *cmd)
          system(commande_f);
       }
       strcat(commande_f,message);
-      write(sock , commande_f , strlen(commande_f));
+      SSL_write(ssl , commande_f , strlen(commande_f));
       printf("Fonction de choix de la commande OUT\n");
       bzero(cat,2048);
       bzero(buf,1024);
       bzero(commande_f,50);
+
       return -1;
 
 }
