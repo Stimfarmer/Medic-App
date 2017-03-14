@@ -57,6 +57,14 @@ int function_to_select( void *socket_desc, char *cmd)
    message = " est votre commande\n";
    strcpy(commande_f ,cmd);
    
+   if(strcmp(cmd,"") == 0)
+   {
+      message = "Aucune commande saisie.\nEntrez une commande valide.\n";
+      write(sock,message,strlen(message));
+      printf("Fonction de choix de la commande OUT\n");
+      return -1;
+   }
+
    if(strcmp(cmd,"auth") == 0)
    {
       printf("Authentification IN\n");
@@ -134,7 +142,9 @@ int function_to_select( void *socket_desc, char *cmd)
       else if(strcmp(cmd_f,"mkdir") == 0)
       {
          printf("Mkdir serveur\n");
+         message = "Fichier créé\n";
          system(commande_f);
+         write(sock , message , strlen(message));
       }
       else if(strcmp(cmd_f,"cd") == 0)
       {
@@ -165,6 +175,8 @@ int function_to_select( void *socket_desc, char *cmd)
       write(sock , commande_f , strlen(commande_f));
       printf("Fonction de choix de la commande OUT\n");
       bzero(cat,2048);
+      bzero(buf,1024);
+      bzero(commande_f,50);
       return -1;
 
 }
