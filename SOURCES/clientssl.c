@@ -94,7 +94,7 @@ void ShowCerts(SSL* ssl)
         printf("Info: No client certificates configured.\n");
 }
  
-int main(int count, char *strings[])
+int main(int argc, char **argv)
 {   SSL_CTX *ctx;
     int server;
     SSL *ssl;
@@ -103,14 +103,14 @@ int main(int count, char *strings[])
     char *hostname, *portnum;
     char message[1000] , server_reply[2000];
  
-    if ( count != 3 )
+    /*if ( count != 3 )
     {
         printf("usage: %s <hostname> <portnum>\n", strings[0]);
         exit(0);
-    }
+    }*/
     SSL_library_init();
-    hostname=strings[1];
-    portnum=strings[2];
+    hostname="127.0.0.1";
+    portnum="8888";
  
     ctx = InitCTX();
     LoadCertificates(ctx, "client.crt", "client.key");

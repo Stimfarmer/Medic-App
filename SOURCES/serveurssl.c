@@ -117,7 +117,7 @@ void ShowCerts(SSL* ssl)
 void Servlet(SSL* ssl) /* Serve the connection -- threadable */ // succède à "connection_handler"
 {   char buf[1024];
     char cmd[200];
-    char reply[1024];
+    //char reply[1024];
     int sd, bytes;
     //const char* HTMLecho="modifié \n";
  
@@ -160,9 +160,9 @@ void Servlet(SSL* ssl) /* Serve the connection -- threadable */ // succède à "
     close(sd);          /* close connection */
 }
  
-int main(int count, char *strings[])
+int main(int argc, char **argv)
 {   SSL_CTX *ctx;
-    int server, *new_sock;
+    int server;//*new_sock;
     char *portnum;
  
     if(!isRoot())
@@ -170,18 +170,18 @@ int main(int count, char *strings[])
         printf("Ce programme doit être executé en contexte root/sudo \n");
         exit(0);
     }
-    if ( count != 2 )
+    /*if ( count != 2 )
     {
         printf("Syntaxe: %s <portnum>\n", strings[0]);
         exit(0);
-    }
+    }*/
     SSL_library_init();
  
-    portnum = strings[1];
+    portnum = "8888"; /******************* 8888 ******************/
     ctx = InitServerCTX();        /* initialize SSL */
     LoadCertificates(ctx, "server.cert", "server.pem"); /* load certs */
     server = OpenListener(atoi(portnum));    /* create server socket */
-
+    printf("Socket SSL créée!\n");
     struct sockaddr_in addr;
     socklen_t len = sizeof(addr);
     SSL *ssl;
