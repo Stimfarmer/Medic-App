@@ -5,10 +5,12 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <fcntl.h>
+#include "chaine.h"
  
 int main(int argc , char *argv[])
 {
    int sock;
+
    struct sockaddr_in server;
    char message[1000] , server_reply[2000];
      
@@ -18,7 +20,7 @@ int main(int argc , char *argv[])
    {
       printf("Could not create socket");
    }
-   puts("Socket created");
+   //puts("Socket created");
      
    server.sin_addr.s_addr = inet_addr("127.0.0.1");
    server.sin_family = AF_INET;
@@ -38,17 +40,20 @@ int main(int argc , char *argv[])
        puts("recv failed");
    }
 
-   puts("Server>");
+   puts("SERVER>");
    puts(server_reply);
    bzero(server_reply,2000);
      
    //keep communicating with server
    while(1)
    {
-      printf("You>");
-      scanf("%s" , message);
       
+      printf("YOU>");
+      
+      fgets(message,sizeof(message),stdin);
+      //scanf("%s" , message);
       //Send some data
+
       if( send(sock , message , strlen(message) , 0) < 0)
       {
           puts("Send failed");
@@ -60,15 +65,15 @@ int main(int argc , char *argv[])
       {
           puts("recv failed");
           break;
-      } 
-
+      }
+      delete_end_char(message,sizeof(message),message);
       if(strcmp(message,"quit") == 0)
       {
          printf("Deconnexion...\n");
          break;
       }
          
-      puts("Server>");
+      puts("SERVER>");
       puts(server_reply);
       bzero(server_reply,2000);
       bzero(message,1000);
