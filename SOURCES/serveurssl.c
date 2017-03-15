@@ -22,6 +22,12 @@ int OpenListener(int port)
     addr.sin_family = AF_INET;
     addr.sin_port = htons(port);
     addr.sin_addr.s_addr = INADDR_ANY;
+    if( setsockopt( sd, SOL_SOCKET, SO_REUSEADDR, &(int){1}, sizeof(int)))
+    {
+       perror("Erreur du set de la socket");
+       return 1;
+    }
+    
     if ( bind(sd, (struct sockaddr*)&addr, sizeof(addr)) != 0 )
     {
         perror("Bind Impossible");
@@ -133,7 +139,7 @@ void Servlet(SSL* ssl) /* Serve the connection -- threadable */ // succède à "
 	  if ( bytes > 0 )
 	  {
 	      buf[bytes] = 0;
-	      printf("Client msg: \"%s\"\n", buf);
+              printf("Client msg: !%s!\n", buf);
 	      //sprintf(reply, "reçu \n", buf);   /* construct reply */
 	      //SSL_write(ssl, reply, strlen(reply)); /* send reply */
 	      if((delete_end_char(cmd,sizeof(cmd),buf))==-1)
@@ -141,7 +147,10 @@ void Servlet(SSL* ssl) /* Serve the connection -- threadable */ // succède à "
 		perror("Erreur supression caractère de fin!");
 		break;
 	      }
+              printf("La commande serveur est %s\n",cmd);
 	      function_to_select(ssl, cmd);
+              bzero(buf,1024);
+	      bzero(cmd,200);
 	      //bytes = SSL_read(ssl, buf, sizeof(buf));
 	  }
 	  else
@@ -149,14 +158,13 @@ void Servlet(SSL* ssl) /* Serve the connection -- threadable */ // succède à "
 	      ERR_print_errors_fp(stderr);
 	      break;
 	  }
-	  bzero(buf,1024);
-	  bzero(cmd,200);
+	  
 	      
 	}
 	while(bytes > 0);
     }
     sd = SSL_get_fd(ssl);       /* get socket connection */
-    SSL_free(ssl);         /* release SSL state */
+    //SSL_free(ssl);         /* release SSL state */
     close(sd);          /* close connection */
 }
  

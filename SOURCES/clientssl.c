@@ -9,6 +9,7 @@
 #include <netdb.h>
 #include <openssl/ssl.h>
 #include <openssl/err.h>
+#include "chaine.h"
  
 #define FAIL    -1
  
@@ -102,6 +103,7 @@ int main(int argc, char **argv)
     int bytes;
     char *hostname, *portnum;
     char message[1000] , server_reply[2000];
+    
  
     /*if ( count != 3 )
     {
@@ -133,8 +135,17 @@ int main(int argc, char **argv)
 	while(1)
 	{
 	    printf("You>");
-	    scanf("%s" , message);
+	    fgets(message,sizeof(message),stdin);
+            printf("Message qui va etre envoye: %s\n",message);
 	    
+            /*if((delete_end_char(message,sizeof(message),message))==-1)
+	      {
+		perror("Erreur supression caractère de fin!");
+		break;
+	      }*/
+
+            
+            
 	    //Send some data
 	    if( SSL_write(ssl , message , strlen(message) ) < 0)
 	    {
@@ -148,18 +159,14 @@ int main(int argc, char **argv)
 		puts("recv failed");
 		break;
 	    }
-	    else
-	    {
-	      puts("Server>");
-	      puts(server_reply);
-	    }
-
+	    delete_end_char(message,sizeof(message),message);
 	    if(strcmp(message,"quit") == 0)
 	    {
 	      printf("Deconnexion...\n");
 	      break;
 	    }
-	      
+            puts("Server>");
+	    puts(server_reply);
 	    bzero(server_reply,2000);
 	    bzero(message,1000);
 	}
