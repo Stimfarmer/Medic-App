@@ -99,7 +99,7 @@ int main(int argc, char **argv)
 {   SSL_CTX *ctx;
     int server;
     SSL *ssl;
-    char buf[1024];
+    char buf[2000];
     int bytes;
     char *hostname, *portnum;
     char message[1000] , server_reply[2000];
@@ -122,30 +122,22 @@ int main(int argc, char **argv)
     if ( SSL_connect(ssl) == FAIL )   /* perform the connection */
         ERR_print_errors_fp(stderr);
     else
-    {   char *msg = "Hello???";
+    {   //char *msg = "Hello serveur";
  
         printf("Connecté et sécurisé par %s \n", SSL_get_cipher(ssl));
         ShowCerts(ssl);        /* get any certs */
-        SSL_write(ssl, msg, strlen(msg));   /* encrypt & send message */
+        //SSL_write(ssl, msg, strlen(msg));   /* encrypt & send message */
         bytes = SSL_read(ssl, buf, sizeof(buf)); /* get reply & decrypt */
-        buf[bytes] = 0;
-        printf("Received: \"%s\"\n", buf);
+	buf[bytes] = 0;
+	puts("\nServer>");
+	puts(buf);
         //SSL_free(ssl);        /* release connection state */
 	
 	while(1)
 	{
 	    printf("You>");
 	    fgets(message,sizeof(message),stdin);
-            printf("Message qui va etre envoye: %s\n",message);
-	    
-            /*if((delete_end_char(message,sizeof(message),message))==-1)
-	      {
-		perror("Erreur supression caractère de fin!");
-		break;
-	      }*/
 
-            
-            
 	    //Send some data
 	    if( SSL_write(ssl , message , strlen(message) ) < 0)
 	    {
@@ -162,10 +154,11 @@ int main(int argc, char **argv)
 	    delete_end_char(message,sizeof(message),message);
 	    if(strcmp(message,"quit") == 0)
 	    {
+	      sleep(1);
 	      printf("Deconnexion...\n");
 	      break;
 	    }
-            puts("Server>");
+            puts("\nServer>");
 	    puts(server_reply);
 	    bzero(server_reply,2000);
 	    bzero(message,1000);

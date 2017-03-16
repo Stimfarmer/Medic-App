@@ -13,9 +13,16 @@
 
 
 #include <stdio.h>
-#include <stdlib.h>
+#include <errno.h>
+#include <unistd.h>
+#include <malloc.h>
 #include <string.h>
-#include <time.h>
+#include <sys/socket.h>
+#include <resolv.h>
+#include <arpa/inet.h>
+#include <netdb.h>
+#include <openssl/ssl.h>
+#include <openssl/err.h>
 
 
 /**
@@ -92,102 +99,136 @@ int nb_lines(FILE* bdd)
    return nb_lignes;
 }
 
-int ask(user usr, void *sock_fd)
+int ask(user usr, void *ssl)
 {
    char *message ,client_message[2000],msg[100];
-   int sock = *(int*)sock_fd;
    int read_size;
    
-   read_size = recv(sock , client_message , sizeof(client_message) , 0);
-
-   if((delete_end_char(msg,sizeof(msg),client_message))==-1)
+   do 
    {
-      perror("Erreur supression caractère de fin!");
-      return -1;
-   }
+     message = "Veuillez remplir les champs necessaires a la creation de votre compte\nSaisir votre nom\n";
 
-   strcpy(usr.name,msg);
+     SSL_write(ssl,message,strlen(message));
 
-   printf("Name:%s\n",usr.name);  
+     
+     read_size = SSL_read(ssl , client_message , sizeof(client_message));
 
-   bzero(client_message,2000);
-   bzero(msg,100);
+     if((delete_end_char(msg,sizeof(msg),client_message))==-1)
+     {
+        perror("Erreur supression caractère de fin!");
+        return -1;
+     }
+     read_size=strlen(msg);
 
-   message = "Saisir votre surname\n";
+     printf("Read size: %i\n",read_size);
 
-   write((int)sock,message,strlen(message));
+     strcpy(usr.name,msg);
 
-   read_size = recv(sock , client_message , sizeof(client_message) , 0);
+     printf("Name:%s\n",usr.name);  
 
-   if((delete_end_char(msg,sizeof(msg),client_message))==-1)
+     bzero(client_message,2000);
+     bzero(msg,100);
+   }while(read_size <= 0);
+
+   do 
    {
-      perror("Erreur supression caractère de fin!");
-      return -1;
-   }
+      message = "Saisir votre surname\n";
 
-   strcpy(usr.surname,msg);
+      SSL_write(ssl,message,strlen(message));
 
-   printf("Surname:%s\n",usr.surname);  
+      read_size = SSL_read(ssl , client_message , sizeof(client_message));
 
-   bzero(client_message,2000);
-   bzero(msg,100);
-
-   message = "Saisir votre fonction\n";
-
-   write((int)sock,message,strlen(message));
-
-   read_size = recv(sock , client_message , sizeof(client_message) , 0);
-
-   if((delete_end_char(msg,sizeof(msg),client_message))==-1)
-   {
-      perror("Erreur supression caractère de fin!");
-      return -1;
-   }
-
-   strcpy(usr.fonction,msg);
-
-   printf("Fonction:%s\n",usr.fonction);
-
-   bzero(client_message,2000);
-   bzero(msg,100);
-
-   message = "Saisir votre numero de secu\n";
-
-   write((int)sock,message,strlen(message));
-
-   read_size = recv(sock , client_message , sizeof(client_message) , 0);
-
-   if((delete_end_char(msg,sizeof(msg),client_message))==-1)
+      if((delete_end_char(msg,sizeof(msg),client_message))==-1)
       {
          perror("Erreur supression caractère de fin!");
          return -1;
       }
+      read_size=strlen(msg);
 
-   usr.nb_secu = atoi(msg);
+      printf("Read size: %i\n",read_size);
 
-   printf("Nb_secu:%i\n",usr.nb_secu);
+      strcpy(usr.surname,msg);
 
-   bzero(client_message,2000);
-   bzero(msg,100);
+      printf("Surname:%s\n",usr.surname);  
 
-   message = "Saisir votre mdp\n";
+      bzero(client_message,2000);
+      bzero(msg,100);
+   }while(read_size <= 0);
 
-   write((int)sock,message,strlen(message));
-
-   read_size = recv(sock , client_message , sizeof(client_message) , 0);
-
-   if((delete_end_char(msg,sizeof(msg),client_message))==-1)
+   do 
    {
-      perror("Erreur supression caractère de fin!");
-      return -1;
-   }
+      message = "Saisir votre fonction\n";
 
-   strcpy(usr.mdp,msg);
+      SSL_write(ssl,message,strlen(message));
 
-   printf("Mdp:%s\n",usr.mdp);  
+      read_size = SSL_read(ssl , client_message , sizeof(client_message));
 
-   bzero(client_message,2000);
-   bzero(msg,100);
+      if((delete_end_char(msg,sizeof(msg),client_message))==-1)
+      {
+         perror("Erreur supression caractère de fin!");
+         return -1;
+      }
+     read_size=strlen(msg);
+
+     printf("Read size: %i\n",read_size);
+
+      strcpy(usr.fonction,msg);
+
+      printf("Fonction:%s\n",usr.fonction);
+
+      bzero(client_message,2000);
+      bzero(msg,100);
+   }while(read_size <= 0);
+
+   do 
+   {
+      message = "Saisir votre numero de secu\n";
+
+      SSL_write(ssl,message,strlen(message));
+
+      read_size = SSL_read(ssl , client_message , sizeof(client_message));
+
+      if((delete_end_char(msg,sizeof(msg),client_message))==-1)
+      {
+         perror("Erreur supression caractère de fin!");
+         return -1;
+      }
+     read_size=strlen(msg);
+
+     printf("Read size: %i\n",read_size);
+
+      usr.nb_secu = atoi(msg);
+
+      printf("Nb_secu:%i\n",usr.nb_secu);
+
+      bzero(client_message,2000);
+      bzero(msg,100);
+   }while(read_size <= 0);
+
+   do 
+   {
+      message = "Saisir votre mdp\n";
+
+      SSL_write(ssl,message,strlen(message));
+
+      read_size = SSL_read(ssl , client_message , sizeof(client_message));
+
+      if((delete_end_char(msg,sizeof(msg),client_message))==-1)
+      {
+         perror("Erreur supression caractère de fin!");
+         return -1;
+      }
+     read_size=strlen(msg);
+
+     printf("Read size: %i\n",read_size);
+
+      strcpy(usr.mdp,msg);
+
+      printf("Mdp:%s\n",usr.mdp);  
+
+      bzero(client_message,2000);
+      bzero(msg,100);
+   }while(read_size <= 0);
 
       if(usr.surname[0]>64 && usr.surname[0]<91)
    {   
@@ -218,12 +259,10 @@ int ask(user usr, void *sock_fd)
 
 
 
-int inlog(user usr,FILE* bdd, void* sock_fd)
+int inlog(user usr,FILE* bdd, void* ssl)
 {
    char *log = malloc(20*sizeof(char));
    char *mdp = malloc(20*sizeof(char));
-   int sock = *(int*)sock_fd;
-   //char rep[200];
    char *message ,client_message[2000],msg[100];
    int read_size;
  
@@ -231,14 +270,24 @@ int inlog(user usr,FILE* bdd, void* sock_fd)
  
    int cursor;
    bdd = fopen("bdd.txt","r");
+   
+   do
+   {
+   message = "Veuillez remplir les champs necessaires a l'authentification\nSaisir votre login\n";
 
-   read_size = recv(sock , client_message , sizeof(client_message) , 0);
+   SSL_write(ssl,message,strlen(message));
+
+   read_size = SSL_read(ssl , client_message , sizeof(client_message));
 
    if((delete_end_char(msg,sizeof(msg),client_message))==-1)
    {
       perror("Erreur supression caractère de fin!");
       return -1;
    }
+
+     read_size=strlen(msg);
+
+     printf("Read size: %i\n",read_size);
 
    strcpy(usr.login,msg);
 
@@ -246,18 +295,24 @@ int inlog(user usr,FILE* bdd, void* sock_fd)
 
    bzero(client_message,2000);
    bzero(msg,100);
+   }while( read_size <= 0);
 
+   do
+   {
    message = "Saisir votre mdp\n";
 
-   write((int)sock,message,strlen(message));
+   SSL_write(ssl,message,strlen(message));
 
-   read_size = recv(sock , client_message , sizeof(client_message) , 0);
+   read_size = SSL_read(ssl , client_message , sizeof(client_message));
 
    if((delete_end_char(msg,sizeof(msg),client_message))==-1)
    {
       perror("Erreur supression caractère de fin!");
       return -1;
    }
+     read_size=strlen(msg);
+
+     printf("Read size: %i\n",read_size);
 
    strcpy(usr.mdp,msg);
 
@@ -265,13 +320,8 @@ int inlog(user usr,FILE* bdd, void* sock_fd)
 
    bzero(client_message,2000);
    bzero(msg,100);
+   }while( read_size <= 0);
 
-   /*printf("\nLogin:");
-   scanf("%s",usr.login);
-   printf("\nMdp:");
-   scanf("%s",usr.mdp);
-   */
-   
 
    while((cursor =fgetc(bdd)) != EOF)
    {
@@ -280,18 +330,21 @@ int inlog(user usr,FILE* bdd, void* sock_fd)
       {
 	 printf("\nLOG IN SUCCESS\n");
 	 message = "\nLog as ";
-         write((int)sock,message,strlen(message));
-         write((int)sock,usr.login,strlen(usr.login));
+         SSL_write(ssl,message,strlen(message));
+         SSL_write(ssl,usr.login,strlen(usr.login));
 	 message = "\n";
-         write((int)sock,message,strlen(message));
+         SSL_write(ssl,message,strlen(message));
 	 return 0;
       }
    }
+   printf("Login:%s\n",usr.login);
+   printf("Mdp registered:%s\n",usr.mdp);
+   printf("Mdp fscanf:%s\n",mdp);
 
    printf("\nERREUR MDP OR LOG\n");
    message = "\nERREUR MDP OR LOG\n";
 
-   write((int)sock,message,strlen(message));
+   SSL_write(ssl,message,strlen(message));
    fclose(bdd);
    desalloc_user(usr);
    free(log);
@@ -306,7 +359,7 @@ int inlog(user usr,FILE* bdd, void* sock_fd)
 
 
 
-int creat_account(FILE*bdd, void* sock_fd)
+int creat_account(FILE*bdd, void* ssl)
 {
    int cursor;
    int trouve = 0;
@@ -340,7 +393,7 @@ int creat_account(FILE*bdd, void* sock_fd)
 
    //printf("\n______CREATION DE COMPTE______\n");
 
-   nb_secu = ask(usr, sock_fd);
+   nb_secu = ask(usr, ssl);
 
    bdd = fopen("bdd.txt","r");
    while((cursor = fgetc(bdd)) != EOF)

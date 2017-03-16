@@ -17,7 +17,7 @@ int function_to_select(SSL *ssl, char *cmd)
    printf("Fonction de choix de la commande IN\n");
 
    char *message;
-
+   int ret;
    char cat[2048];
    char *cmd_f;
    FILE *to_send;
@@ -41,9 +41,6 @@ int function_to_select(SSL *ssl, char *cmd)
    if(strcmp(cmd,"auth") == 0)
    {
       printf("Authentification IN\n");
-      strcat(cmd,message);
-
-      SSL_write(ssl , cmd , strlen(cmd));
       authentification_function(ssl);
       printf("Authentification OUT\n");
       printf("Fonction de choix de la commande OUT\n");
@@ -53,12 +50,6 @@ int function_to_select(SSL *ssl, char *cmd)
    else if(strcmp(cmd,"insc") == 0)
    {
       printf("Inscription IN\n");
-      strcat(cmd,message);
-
-      SSL_write(ssl , cmd , strlen(cmd));
-      //inscription_function(socket_desc);
-
-
       error = inscription_function(ssl);
       if(error == -1)
       {
@@ -78,15 +69,8 @@ int function_to_select(SSL *ssl, char *cmd)
    else if(strcmp(cmd,"help") == 0)
    {
       printf("Aide IN\n");
-      strcat(cmd,message);
-
-      SSL_write(ssl , cmd , strlen(cmd));
-
-
-      message = "1-\"auth\" pour vous authentifier!\n2-\"insc\" pour vous inscrire!\n3-\"help\" pour obtenir de l'aide\n4-\"quit\" pour quitter le serveur!\n";
+      message = "Bonjour!\n1- auth pour authentifier\n2- insc pour inscrire\n3- help pour afficher l'aide\n4- quit pour quitter le serveur\nBonne navigation\n";
       SSL_write(ssl , message , strlen(message));
-
-      //affichage_aide_function(socket_desc);
       printf("Aide OUT\n");
       printf("Fonction de choix de la commande OUT\n");
       return 0;
@@ -108,7 +92,7 @@ int function_to_select(SSL *ssl, char *cmd)
       if(strcmp(cmd_f,"ls") == 0)
       {
          printf("Ls serveur\n");
-         //system(commande_f);
+	 bzero(cat,2048);
          if (( to_send = popen(commande_f, "r")) == NULL)
          {
             perror("popen");
@@ -127,37 +111,57 @@ int function_to_select(SSL *ssl, char *cmd)
       else if(strcmp(cmd_f,"mkdir") == 0)
       {
          printf("Mkdir serveur\n");
-         message = "Fichier créé\n";
          system(commande_f);
+	 message = "Fichier créé\n";
          SSL_write(ssl , message , strlen(message));
       }
       else if(strcmp(cmd_f,"cd") == 0)
       {
          printf("Cd serveur\n");
          system(commande_f);
+	 message = "Cd effectué\n";
+         SSL_write(ssl , message , strlen(message));
       }
       else if(strcmp(cmd_f,"rm") == 0)
       {
          printf("Rm serveur\n");
-         system(commande_f);
+         ret = system(commande_f);
+         if(ret == -1){
+            perror("Erreur rm");
+	    return EXIT_FAILURE;
+         }
+	 else
+         {
+            message = "Fichier supprimé\n";
+            SSL_write(ssl , message , strlen(message));
+      	 }
       }
       else if(strcmp(cmd_f,"cp") == 0)
       {
          printf("Cp serveur\n");
          system(commande_f);
+	 message = "Copie effectuée\n";
+         SSL_write(ssl , message , strlen(message));
       }
       else if(strcmp(cmd_f,"touch") == 0)
       {
          printf("Touch serveur\n");
          system(commande_f);
+	 message = "Fichier créé\n";
+         SSL_write(ssl , message , strlen(message));
       }
       else if(strcmp(cmd_f,"vim") == 0)
       {
          printf("Vim serveur\n");
          system(commande_f);
+	 message = "Vim lancé\n";
+         SSL_write(ssl , message , strlen(message));
       }
-      strcat(commande_f,message);
-      SSL_write(ssl , commande_f , strlen(commande_f));
+      else
+      {
+         message = "Entrez une commande valide.\n";
+         SSL_write(ssl , message , strlen(message));
+      }
       printf("Fonction de choix de la commande OUT\n");
       bzero(cat,2048);
       bzero(buf,1024);

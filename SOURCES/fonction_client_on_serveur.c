@@ -33,20 +33,19 @@ int quit_function( void *ssl)
    return 0;
 }
 
-int inscription_function( void *sock_fd)
+int inscription_function( void *ssl)
 {
-   int sock = *(int*)sock_fd;
-   char *message;
+   //char *message;
  
-   message = "Veuillez remplir les champs necessaires a la creation de votre compte\nSaisir votre nom\n";
+   /*message = "Veuillez remplir les champs necessaires a la creation de votre compte\nSaisir votre nom\n";
 
-   write((int)sock,message,strlen(message));
+   SSL_write(ssl,message,strlen(message));*/
 
    FILE* bdd = NULL;
    bdd = fopen("bdd.txt","a");
    fclose(bdd);
 
-   int  test = creat_account(bdd,sock_fd);
+   int  test = creat_account(bdd,ssl);
    if(test == -1)
    {
       return -1;
@@ -55,21 +54,20 @@ int inscription_function( void *sock_fd)
    return 0;
 }
 
-int authentification_function( void *sock_fd)
+int authentification_function( void *ssl)
 {
-   int sock = *(int*)sock_fd;
-   char *message;
+   //char *message;
  
-   message = "Veuillez remplir les champs necessaires a l'authentification\nSaisir votre login\n";
+   /*message = "Veuillez remplir les champs necessaires a l'authentification\nSaisir votre login\n";
 
-   write((int)sock,message,strlen(message));
+   SSL_write(ssl,message,strlen(message));*/
 
    user usr;
    FILE* bdd = NULL;
    bdd = fopen("bdd.txt","a");
    fclose(bdd);
 
-   inlog(usr,bdd,sock_fd);
+   inlog(usr,bdd,ssl);
 
 
    return 0;
