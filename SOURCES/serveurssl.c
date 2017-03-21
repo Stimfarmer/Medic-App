@@ -138,9 +138,7 @@ void Servlet(SSL* ssl) /* Serve the connection -- threadable */ // succède à "
 	SSL_write(ssl,liste_cmd,strlen(liste_cmd));
         do
 	{
-	  printf("Deb\n");
 	  bytes = SSL_read(ssl, buf, sizeof(buf));
-	  printf("Deb\n");
 	  if ( bytes > 0 )
 	  {
 	      if((delete_end_char(cmd,sizeof(cmd),buf))==-1)
@@ -170,7 +168,6 @@ void Servlet(SSL* ssl) /* Serve the connection -- threadable */ // succède à "
 	}
 	while(bytes > 0);
     }
-    printf("Deb\n");
     sd = SSL_get_fd(ssl);       /* get socket connection */
     //SSL_free(ssl);         /* release SSL state */
     close(sd);          /* close connection */

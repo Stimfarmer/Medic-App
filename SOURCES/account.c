@@ -255,7 +255,6 @@ int ask(user usr, void *ssl)
    }
 
    read_size++;
-
    return usr.nb_secu;
 }
 
@@ -293,7 +292,8 @@ int inlog(user usr,FILE* bdd, void* ssl)
 
    strcpy(usr.login,msg);
 
-   printf("Login:%s\n",usr.login);  
+   printf("Login:%s\n",usr.login);
+ 
 
    bzero(client_message,2000);
    bzero(msg,100);

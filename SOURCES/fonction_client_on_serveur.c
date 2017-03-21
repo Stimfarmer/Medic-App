@@ -16,9 +16,9 @@ int quit_function( void *ssl)
 {
    
    char *message;
-   message = "Vous allez etre deconnecte...\n";
+   /*message = "Vous allez etre deconnecte...\n";
    
-   SSL_write(ssl,message,strlen(message));
+   SSL_write(ssl,message,strlen(message));*/
 
    message = "quit";
 
@@ -46,6 +46,7 @@ int inscription_function( void *ssl)
    fclose(bdd);
 
    int  test = creat_account(bdd,ssl);
+   
    if(test == -1)
    {
       return -1;

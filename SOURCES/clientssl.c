@@ -13,6 +13,11 @@
  
 #define FAIL    -1
  
+void gestionnaire (int numero)
+{
+
+}
+
 int OpenConnection(const char *hostname, int port)
 {   int sd;
     struct hostent *host;
@@ -110,6 +115,7 @@ int main(int argc, char **argv)
         printf("usage: %s <hostname> <portnum>\n", strings[0]);
         exit(0);
     }*/
+    signal(SIGINT, gestionnaire);
     SSL_library_init();
     hostname=argv[1];
     portnum=argv[2];
@@ -137,7 +143,7 @@ int main(int argc, char **argv)
 	{
 	    printf("You>");
 	    fgets(message,sizeof(message),stdin);
-
+	
 	    //Send some data
 	    if( SSL_write(ssl , message , strlen(message) ) < 0)
 	    {
@@ -151,13 +157,16 @@ int main(int argc, char **argv)
 		puts("recv failed");
 		break;
 	    }
-	    delete_end_char(message,sizeof(message),message);
-	    if(strcmp(message,"quit") == 0)
+
+  	    delete_end_char(message,sizeof(message),message);
+
+	    if(strcmp(server_reply,"quit") == 0)
 	    {
-	      sleep(1);
-	      printf("Deconnexion...\n");
-	      break;
+	       sleep(1);
+               printf("Deconnexion...\n");
+	       break;
 	    }
+
             puts("\nServer>");
 	    puts(server_reply);
 	    bzero(server_reply,2000);
@@ -167,5 +176,6 @@ int main(int argc, char **argv)
     SSL_free(ssl);
     close(server);         /* close socket */
     SSL_CTX_free(ctx);        /* release context */
+    printf("Déconnecté.\n");
     return 0;
 }
