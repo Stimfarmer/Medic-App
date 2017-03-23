@@ -103,6 +103,7 @@ int ask(user usr, void *ssl)
 {
    char *message ,client_message[2000],msg[100];
    int read_size;
+   int recup_result_chaine;
    
    do 
    {
@@ -119,8 +120,11 @@ int ask(user usr, void *ssl)
         return -1;
      }
      read_size=strlen(msg);
+     
+     recup_result_chaine=is_alpha(msg);
 
      printf("Read size: %i\n",read_size);
+     printf("Recup result chaine: %i\n",recup_result_chaine);
 
      strcpy(usr.name,msg);
 
@@ -128,7 +132,7 @@ int ask(user usr, void *ssl)
 
      bzero(client_message,2000);
      bzero(msg,100);
-   }while(read_size <= 0);
+   }while((read_size <= 0) || (recup_result_chaine == -1));
 
    do 
    {
@@ -145,7 +149,10 @@ int ask(user usr, void *ssl)
       }
       read_size=strlen(msg);
 
+      recup_result_chaine=is_alpha(msg);
+
       printf("Read size: %i\n",read_size);
+     printf("Recup result chaine: %i\n",recup_result_chaine);
 
       strcpy(usr.surname,msg);
 
@@ -153,7 +160,7 @@ int ask(user usr, void *ssl)
 
       bzero(client_message,2000);
       bzero(msg,100);
-   }while(read_size <= 0);
+   }while((read_size <= 0) || (recup_result_chaine == -1));
 
    do 
    {
@@ -170,7 +177,10 @@ int ask(user usr, void *ssl)
       }
      read_size=strlen(msg);
 
+      recup_result_chaine=is_alpha(msg);
+
      printf("Read size: %i\n",read_size);
+     printf("Recup result chaine: %i\n",recup_result_chaine);
 
       strcpy(usr.fonction,msg);
 
@@ -178,7 +188,7 @@ int ask(user usr, void *ssl)
 
       bzero(client_message,2000);
       bzero(msg,100);
-   }while(read_size <= 0);
+   }while((read_size <= 0) || (recup_result_chaine == -1));
 
    do 
    {
@@ -195,7 +205,10 @@ int ask(user usr, void *ssl)
       }
      read_size=strlen(msg);
 
+     recup_result_chaine=is_num(msg);
+
      printf("Read size: %i\n",read_size);
+     printf("Recup result chaine: %i\n",recup_result_chaine);
 
       usr.nb_secu = atoi(msg);
 
@@ -203,11 +216,11 @@ int ask(user usr, void *ssl)
 
       bzero(client_message,2000);
       bzero(msg,100);
-   }while(read_size <= 0);
+   }while((read_size <= 0) || (recup_result_chaine == -1));
 
    do 
    {
-      message = "Saisir votre mdp\n";
+      message = "Saisir votre mdp ( mdp alpha_numérique )\n";
 
       SSL_write(ssl,message,strlen(message));
 
@@ -219,8 +232,10 @@ int ask(user usr, void *ssl)
          return -1;
       }
      read_size=strlen(msg);
+     recup_result_chaine=is_alnum(msg);
 
      printf("Read size: %i\n",read_size);
+     printf("Recup_result_chaine: %i\n",recup_result_chaine);
 
       strcpy(usr.mdp,msg);
 
@@ -228,7 +243,7 @@ int ask(user usr, void *ssl)
 
       bzero(client_message,2000);
       bzero(msg,100);
-   }while(read_size <= 0);
+   }while((read_size <= 0) || (recup_result_chaine == -1));
 	
 	bzero(usr.login,10);
 
