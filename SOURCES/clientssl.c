@@ -108,6 +108,8 @@ int main(int argc, char **argv)
     int bytes;
     char *hostname, *portnum;
     char message[1000] , server_reply[2000];
+    char *argfile;
+    char *cmd_vim;
     
  
     /*if ( count != 3 )
@@ -165,6 +167,23 @@ int main(int argc, char **argv)
 	       sleep(1);
                printf("Deconnexion...\n");
 	       break;
+	    }
+	    
+	    cmd_vim = strtok(message," "); // on fractionne la chaine pour récupérer l'argument s'il existe
+	    if(strcmp(cmd_vim,"vim")==0)
+	    {
+	      char vim_buf[300];
+	      argfile=strtok(NULL," ");
+	      if ( argfile == NULL ) // si il n'y a pas d'arguments pour vim 
+	      {
+		sprintf(vim_buf,"/home/romain/PROJET_SYSTEME_RESEAUX/SOURCES/vim_script.sh"); // mettre le bon path
+		system(vim_buf);
+	      }
+	      else
+	      {
+		sprintf(vim_buf,"/home/romain/PROJET_SYSTEME_RESEAUX/SOURCES/vim_script.sh %s", argfile); // idem 
+		system(vim_buf);
+	      }
 	    }
 
             puts("\nServer>");

@@ -22,6 +22,7 @@ int function_to_select(SSL *ssl, char *cmd)
    char *cmd_f;
    FILE *to_send;
    char buf[1024];
+   char *cmd2;
    char commande_f[50];
    int error;
    printf("La cmd est %s\n",cmd);
@@ -85,7 +86,7 @@ int function_to_select(SSL *ssl, char *cmd)
    }
    else
       cmd_f = strtok(cmd," ");
-
+      sprintf(cmd2,cmd + strlen(cmd_f));
       if(strcmp(cmd_f,"ls") == 0)
       {
          printf("Ls serveur\n");
@@ -150,7 +151,6 @@ int function_to_select(SSL *ssl, char *cmd)
       else if(strcmp(cmd_f,"vim") == 0)
       {
          printf("Vim serveur\n");
-         system(commande_f);
 	 message = "Vim lancé\n";
          SSL_write(ssl , message , strlen(message));
       }
