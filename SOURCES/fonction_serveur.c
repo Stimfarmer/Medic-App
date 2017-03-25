@@ -20,6 +20,7 @@ int function_to_select(SSL *ssl, char *cmd)
    int ret;
    char cat[2048];
    char *cmd_f;
+   int desc, desc2;
    FILE *to_send;
    char buf[1024];
    char *cmd2;
@@ -120,6 +121,28 @@ int function_to_select(SSL *ssl, char *cmd)
 	 message = "Cd effectué\n";
          SSL_write(ssl , message , strlen(message));
       }
+      else if(strcmp(cmd_f,"cat") == 0)
+      {
+         printf("Cat serveur\n");
+	 bzero(cat,5096);
+         if (( to_send = popen(commande_f, "r")) == NULL)
+         {
+            perror("popen");
+            exit(1);
+         }
+	 printf("Deb1\n");
+         while(fgets(buf, sizeof(buf), to_send))
+         {
+	    printf("Deb2\n");
+            strcat(cat,buf);
+            
+         }
+	 printf("Deb3\n");
+         SSL_write(ssl , cat , strlen(cat));
+         
+         pclose(to_send);
+         
+      }
       else if(strcmp(cmd_f,"rm") == 0)
       {
          printf("Rm serveur\n");
@@ -153,7 +176,9 @@ int function_to_select(SSL *ssl, char *cmd)
          printf("Vim serveur\n");
 	 message = "Vim lancé\n";
          SSL_write(ssl , message , strlen(message));
+	  printf("Vim serveur\n");
       }
+
       else
       {
          message = "Entrez une commande valide.\n";
