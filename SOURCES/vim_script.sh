@@ -1,7 +1,7 @@
 #!/bin/bash
 
-ssh user@127.0.0.1 -p 443 2> /dev/null 
+ssh vim@127.0.0.1 -p 443 2> /dev/null 
 
-echo password >&1 > /dev/null 
+echo connexion_vim >&1 > /dev/null 
 
 exec vim $1 

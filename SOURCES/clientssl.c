@@ -176,12 +176,12 @@ int main(int argc, char **argv)
 	      argfile=strtok(NULL," ");
 	      if ( argfile == NULL ) // si il n'y a pas d'arguments pour vim 
 	      {
-		sprintf(vim_buf,"/home/romain/PROJET_SYSTEME_RESEAUX/SOURCES/vim_script.sh"); // mettre le bon path
+		sprintf(vim_buf,"/home/esapin/Bureau/PROJET_RESEAU/SOURCES/vim_script.sh"); // mettre le bon path
 		system(vim_buf);
 	      }
 	      else
 	      {
-		sprintf(vim_buf,"/home/romain/PROJET_SYSTEME_RESEAUX/SOURCES/vim_script.sh %s", argfile); // idem 
+		sprintf(vim_buf,"/home/esapin/Bureau/PROJET_RESEAU/SOURCES/vim_script.sh %s", argfile); // idem 
 		system(vim_buf);
 	      }
 	    }
