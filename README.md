@@ -5,8 +5,8 @@ Aucune licence n'est définie.
 
 
 Lignes de compilation:
-gcc -Wall -o ssl-client clientssl.c chaine.c -L/usr/local/ssl/lib/ -lcrypto -lssl
-gcc -Wall -o ssl-serveur serveurssl.c fonction_serveur.c fonction_client_on_serveur.c chaine.c account.c cryptage.c -L/usr/local/ssl/lib/ -lcrypto -lssl -lpthread
+gcc -Wall -o ssl-client clientssl.c chaine.c strsplit.c L/usr/local/ssl/lib/ -lcrypto -lssl
+gcc -Wall -o ssl-serveur serveurssl.c fonction_serveur.c strsplit.c fonction_client_on_serveur.c chaine.c account.c cryptage.c -L/usr/local/ssl/lib/ -lcrypto -lssl -lpthread
 
 vim : 
 clientssl.c : lignes 179 & 184, mettre le bon path du script (par rapport à votre machine)
