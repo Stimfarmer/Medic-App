@@ -99,6 +99,65 @@ int nb_lines(FILE* bdd)
    return nb_lignes;
 }
 
+void search_log(char *log,int number,char *stck)
+{
+	FILE *bdd = NULL;
+   bdd = fopen("bdd.txt","r");
+  
+  
+   int dust1;
+   char *dust2 = malloc(20*sizeof(char));
+   char *dust3 = malloc(20*sizeof(char));
+   char *dust4 = malloc(20*sizeof(char));
+   char *search = malloc(20*sizeof(char));
+   char *dust5 = malloc(20*sizeof(char));
+   char *dust6 = malloc(20*sizeof(char));
+   char *mot = malloc(20*sizeof(char));
+  
+   int i=0;
+   int j;
+   int cursor;
+  
+   while((cursor = fgetc(bdd)) != EOF)
+   {
+		fscanf(bdd,"%d %s %s %s %s %s %s",&dust1,dust2,dust3,dust4,search,dust5,dust6);
+  
+		if(strcmp(search,log) == 0)
+		{
+         i++;
+      }
+   }
+  
+   if(i != 0)
+   {
+      number++;
+      bzero(log,strlen(log));
+      for(j=0;j<strlen(stck);j++)
+      {
+         log[j] = stck[j];
+      }
+		printf("AVANT:%s\n",log); 
+      sprintf(mot,"%d",number);
+      strcat(log,mot);
+		printf("[%s]\n",log);
+      search_log(log,number,stck);
+   }
+	free(dust2);
+	free(dust3);
+	free(dust4);
+	free(search);
+	free(dust5);
+	free(dust6);
+	free(mot);
+
+
+}
+
+
+
+
+
+
 int ask(user usr, void *ssl)
 {
    char *message ,client_message[2000],msg[100];
@@ -245,8 +304,7 @@ int ask(user usr, void *ssl)
       bzero(msg,100);
    }while((read_size <= 0) || (recup_result_chaine == -1));
 	
-	bzero(usr.login,10);
-
+	bzero(usr.login,20);
       if(usr.surname[0]>64 && usr.surname[0]<91)
    {   
       usr.login[0] = usr.surname[0]+32;
@@ -257,17 +315,29 @@ int ask(user usr, void *ssl)
    }
 
    int i;
-   for(i=1;i<=7;i++)
+   for(i=1;i<=strlen(usr.name);i++)
    {
       if(usr.name[i-1]>64 && usr.name[i-1]<91)
       {
-	 usr.login[i] = usr.name[i-1]+32;
+			usr.login[i] = usr.name[i-1]+32;
       }
       if(usr.name[i-1]>96 && usr.name[i-1]<123)
       {
-	 usr.login[i] = usr.name[i-1];
+			usr.login[i] = usr.name[i-1];
       }
    }
+	char *stck = malloc(20*sizeof(char));
+	int j;
+	bzero(stck,20);
+	for(j=0;j<strlen(usr.login);j++)
+	{
+		stck[j] = usr.login[j];
+	}
+	printf("-LA----%s-----\n",usr.login);
+	search_log(usr.login,0,stck);
+	printf("FINAL:%s\n",usr.login);
+	free(stck);
+		
 
    read_size++;
    return usr.nb_secu;
