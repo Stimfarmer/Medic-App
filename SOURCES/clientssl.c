@@ -156,6 +156,7 @@ int main(int argc, char **argv)
 	    if( SSL_write(ssl , message , strlen(message) ) < 0)
 	    {
 		puts("Send failed");
+	        printf("Ce send??\n");
 		break;
 	    }
 
@@ -165,8 +166,6 @@ int main(int argc, char **argv)
 		puts("recv failed");
 		break;
 	    }
-
-	    printf("Crash1\n");
 
 	    if( (strsplit(server_reply,log," ")) > 0){
 	       delete_end_char(log[0],sizeof(log[0]),log[0]);
@@ -217,5 +216,5 @@ int main(int argc, char **argv)
     close(server);         /* close socket */
     SSL_CTX_free(ctx);        /* release context */
     printf("Déconnecté.\n");
-    return 0;
+    exit(2);
 }
