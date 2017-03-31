@@ -10,6 +10,7 @@
 #include <openssl/ssl.h>
 #include <openssl/err.h>
 #include "chaine.h"
+#include "strsplit.h"
  
 #define FAIL    -1
  
@@ -103,6 +104,8 @@ void ShowCerts(SSL* ssl)
 int main(int argc, char **argv)
 {   SSL_CTX *ctx;
     int server;
+    char *log[20];
+    //int log_or_not; // 0 = non log 1 = log;
     SSL *ssl;
     char buf[2000];
     int bytes;
@@ -110,6 +113,9 @@ int main(int argc, char **argv)
     char message[1000] , server_reply[2000];
     char *argfile;
     char *cmd_vim;
+    char user[20];
+
+    strcpy(user,"You");
     
  
     /*if ( count != 3 )
@@ -143,9 +149,9 @@ int main(int argc, char **argv)
 	
 	while(1)
 	{
-	    printf("You>");
+	    printf("%s>",user);
 	    fgets(message,sizeof(message),stdin);
-	
+	    printf("Message qui va être envoyé: %s\n",message);
 	    //Send some data
 	    if( SSL_write(ssl , message , strlen(message) ) < 0)
 	    {
@@ -160,6 +166,18 @@ int main(int argc, char **argv)
 		break;
 	    }
 
+	    printf("Crash1\n");
+
+	    if( (strsplit(server_reply,log," ")) > 0){
+	       delete_end_char(log[0],sizeof(log[0]),log[0]);
+	       if( strcmp(log[0],"Log") == 0){
+	          printf("Je suis log!!\n");
+	          bzero(user,20);
+	          delete_end_char(log[2],20*sizeof(char),log[2]);
+		  strcpy(user,log[2]);
+               }
+            }
+	    
   	    delete_end_char(message,sizeof(message),message);
 
 	    if(strcmp(server_reply,"quit") == 0)
@@ -168,22 +186,25 @@ int main(int argc, char **argv)
                printf("Deconnexion...\n");
 	       break;
 	    }
-	    
-	    cmd_vim = strtok(message," "); // on fractionne la chaine pour récupérer l'argument s'il existe
-	    if(strcmp(cmd_vim,"vim")==0)
-	    {
-	      char vim_buf[300];
-	      argfile=strtok(NULL," ");
-	      if ( argfile == NULL ) // si il n'y a pas d'arguments pour vim 
-	      {
-		sprintf(vim_buf,"/home/esapin/Bureau/PROJET_RESEAU/SOURCES/vim_script.sh"); // mettre le bon path
-		system(vim_buf);
-	      }
-	      else
-	      {
-		sprintf(vim_buf,"/home/esapin/Bureau/PROJET_RESEAU/SOURCES/vim_script.sh %s", argfile); // idem 
-		system(vim_buf);
-	      }
+	
+	    if( strcmp(message,"") != 0){
+
+	    	cmd_vim = strtok(message," "); // on fractionne la chaine pour récupérer l'argument s'il existe
+	    	if(strcmp(cmd_vim,"vim")==0)
+	    	{
+	      	char vim_buf[300];
+	      	argfile=strtok(NULL," ");
+	     	 if ( argfile == NULL ) // si il n'y a pas d'arguments pour vim 
+	      	{
+			sprintf(vim_buf,"/home/esapin/Bureau/PROJET_RESEAU/SOURCES/vim_script.sh"); // mettre le bon path
+			system(vim_buf);
+	      	}
+	      	else
+	      	{
+			sprintf(vim_buf,"/home/esapin/Bureau/PROJET_RESEAU/SOURCES/vim_script.sh %s", argfile); // idem 
+			system(vim_buf);
+	      	}
+	   	 }
 	    }
 
             puts("\nServer>");

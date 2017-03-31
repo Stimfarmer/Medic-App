@@ -151,7 +151,6 @@ void Servlet(SSL* ssl) /* Serve the connection -- threadable */ // succède à "
 	      //SSL_write(ssl, reply, strlen(reply)); /* send reply */
               printf("La commande serveur est %s\n",cmd);
 	      function_to_select(ssl, cmd);
-
               bzero(buf,1024);
 	      bzero(cmd,200);
 
