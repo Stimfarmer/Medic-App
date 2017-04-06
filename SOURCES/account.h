@@ -19,7 +19,13 @@ typedef struct{
 
 void init_user(user usr);
 
+user alloc_user(user usr);
+
+void desalloc_user(user usr);
+
 int nb_lines(FILE* bdd);
+
+void search_log(char *log,int number,char *stck);
 
 int ask(user usr, void *ssl);
 
