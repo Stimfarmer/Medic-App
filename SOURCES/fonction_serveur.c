@@ -14,6 +14,7 @@ int function_to_select(SSL *ssl, char *cmd, int*log)
    printf("Fonction de choix de la commande IN\n");
 
    char *message;
+   char *file;
    int ret;
    char cat[2048];
    char *cmd_f;
@@ -76,7 +77,7 @@ int function_to_select(SSL *ssl, char *cmd, int*log)
    else if(strcmp(cmd,"help") == 0)
    {
       printf("Aide IN\n");
-      message = "Bonjour!\n1- auth pour authentifier\n2- insc pour inscrire\n3- help pour afficher l'aide\n4- quit pour quitter le serveur\nBonne navigation\n";
+      message = "Bonjour!\n1- auth pour authentifier\n2- deauth pour de loger\n3- insc pour inscrire\n4- help pour afficher l'aide\n5- quit pour quitter le serveur\nBonne navigation\n";
       SSL_write(ssl , message , strlen(message));
       printf("Aide OUT\n");
       printf("Fonction de choix de la commande OUT\n");
@@ -112,6 +113,14 @@ int function_to_select(SSL *ssl, char *cmd, int*log)
          pclose(to_send);
          
       }
+      else if(strcmp(cmd_f,"dl") == 0)
+      {
+         printf("Dl serveur\n");
+	 message = "Fichier dl\n";
+	 file = strtok(NULL," ");
+	 printf("File à DL: %s\n",file);
+         SSL_write(ssl , message , strlen(message));
+      }
       else if(strcmp(cmd_f,"mkdir") == 0)
       {
          printf("Mkdir serveur\n");
@@ -122,7 +131,9 @@ int function_to_select(SSL *ssl, char *cmd, int*log)
       else if(strcmp(cmd_f,"cd") == 0)
       {
          printf("Cd serveur\n");
-         system(commande_f);
+	 file = strtok(NULL," ");
+         chdir(file);
+    	 execvp("cd",(char * const*)file);
 	 message = "Cd effectué\n";
          SSL_write(ssl , message , strlen(message));
       }

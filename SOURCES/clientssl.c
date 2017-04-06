@@ -151,6 +151,13 @@ int main(int argc, char **argv)
 	{
 	    printf("%s>",user);
 	    fgets(message,sizeof(message),stdin);
+
+  	    delete_end_char(message,sizeof(message),message);
+	    if((strcmp(message,"clear")) == 0){
+	    	system("clear");
+	 	continue;
+	    }	    
+
 	    //Send some data
 	    if( SSL_write(ssl , message , strlen(message) ) < 0)
 	    {
