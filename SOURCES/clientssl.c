@@ -151,12 +151,10 @@ int main(int argc, char **argv)
 	{
 	    printf("%s>",user);
 	    fgets(message,sizeof(message),stdin);
-	    printf("Message qui va être envoyé: %s\n",message);
 	    //Send some data
 	    if( SSL_write(ssl , message , strlen(message) ) < 0)
 	    {
 		puts("Send failed");
-	        printf("Ce send??\n");
 		break;
 	    }
 

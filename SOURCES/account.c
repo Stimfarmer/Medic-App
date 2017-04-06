@@ -344,7 +344,7 @@ int ask(user usr, void *ssl)
 
 
 
-int inlog(user usr,FILE* bdd, void* ssl, int *log_or_not)
+int inlog(user usr,FILE* bdd, void* ssl)
 {
    char *log = malloc(20*sizeof(char));
    char *mdp = malloc(20*sizeof(char));
@@ -415,7 +415,6 @@ int inlog(user usr,FILE* bdd, void* ssl, int *log_or_not)
       if(strcmp(log,usr.login)==0 && strcmp(mdp,usr.mdp) == 0)
       {
 	 printf("\nLOG IN SUCCESS\n");
-	 *(log_or_not) = 1;
 	 message = "\nLog as ";
 	 bzero(petit_buffer,50);
 	 sprintf(petit_buffer,message);

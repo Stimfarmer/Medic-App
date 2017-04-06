@@ -9,9 +9,6 @@
 
 
 
-int *log_or_not;
-
-
 int function_to_select(SSL *ssl, char *cmd)
 {
    printf("Fonction de choix de la commande IN\n");
@@ -27,8 +24,6 @@ int function_to_select(SSL *ssl, char *cmd)
    int error;
    printf("La cmd est %s\n",cmd);
   
-   log_or_not = (int*)malloc(1*sizeof(int));
-   *(log_or_not) = 0;
 
    printf("Deb1\n");
 
@@ -46,7 +41,7 @@ int function_to_select(SSL *ssl, char *cmd)
    if(strcmp(cmd,"auth") == 0)
    {
       printf("Authentification IN\n");
-      authentification_function(ssl,log_or_not);
+      authentification_function(ssl);
       printf("Authentification OUT\n");
       printf("Fonction de choix de la commande OUT\n");
 
@@ -88,7 +83,7 @@ int function_to_select(SSL *ssl, char *cmd)
       printf("Fonction de choix de la commande OUT\n");
       return 0;
    }
-   else if(*(log_or_not) == 1){
+   else{
       cmd_f = strtok(cmd," ");
       if(strcmp(cmd_f,"ls") == 0)
       {
@@ -157,15 +152,13 @@ int function_to_select(SSL *ssl, char *cmd)
          SSL_write(ssl , message , strlen(message));
       }
       }
-   else{
 
-      message = "Entrez une commande valide.\n";
-      SSL_write(ssl , message , strlen(message));
+      //message = "Entrez une commande valide.\n";
+      //SSL_write(ssl , message , strlen(message));
       printf("Fonction de choix de la commande OUT\n");
       bzero(cat,2048);
       bzero(buf,1024);
       bzero(commande_f,50);
-   }
 	
       
 
