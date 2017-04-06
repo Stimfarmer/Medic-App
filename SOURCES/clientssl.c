@@ -104,7 +104,7 @@ void ShowCerts(SSL* ssl)
 int main(int argc, char **argv)
 {   SSL_CTX *ctx;
     int server;
-    char *log[20];
+    char *log[1024];
     //int log_or_not; // 0 = non log 1 = log;
     SSL *ssl;
     char buf[2000];

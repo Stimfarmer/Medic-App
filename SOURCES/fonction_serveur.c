@@ -23,9 +23,6 @@ int function_to_select(SSL *ssl, char *cmd)
    char commande_f[50];
    int error;
    printf("La cmd est %s\n",cmd);
-  
-
-   printf("Deb1\n");
 
    message = " est votre commande\n";
    strcpy(commande_f ,cmd);
@@ -38,7 +35,7 @@ int function_to_select(SSL *ssl, char *cmd)
       return -1;
    }
 
-   if(strcmp(cmd,"auth") == 0)
+   else if(strcmp(cmd,"auth") == 0)
    {
       printf("Authentification IN\n");
       authentification_function(ssl);
@@ -83,12 +80,13 @@ int function_to_select(SSL *ssl, char *cmd)
       printf("Fonction de choix de la commande OUT\n");
       return 0;
    }
-   else{
+   else
       cmd_f = strtok(cmd," ");
       if(strcmp(cmd_f,"ls") == 0)
       {
          printf("Ls serveur\n");
 	 bzero(cat,2048);
+	 printf("Commande_f: %s\n",commande_f);
          if (( to_send = popen(commande_f, "r")) == NULL)
          {
             perror("popen");
@@ -150,7 +148,6 @@ int function_to_select(SSL *ssl, char *cmd)
       {
          message = "Entrez une commande valide.\n";
          SSL_write(ssl , message , strlen(message));
-      }
       }
 
       //message = "Entrez une commande valide.\n";
