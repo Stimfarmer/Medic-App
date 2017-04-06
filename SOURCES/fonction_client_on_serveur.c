@@ -55,7 +55,7 @@ int inscription_function( void *ssl)
    return 0;
 }
 
-int authentification_function( void *ssl)
+int authentification_function( void *ssl, int*log)
 {
    //char *message;
  
@@ -68,9 +68,15 @@ int authentification_function( void *ssl)
    bdd = fopen("bdd.txt","a");
    fclose(bdd);
 
-   inlog(usr,bdd,ssl);
+   inlog(usr,bdd,ssl,log);
 
 
    return 0;
+}
+
+int deauth_function(void *ssl, int*log)
+{
+	*(log) = 0;
+	return 0;
 }
 

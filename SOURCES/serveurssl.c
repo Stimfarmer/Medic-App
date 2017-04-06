@@ -123,18 +123,22 @@ void ShowCerts(SSL* ssl)
 void Servlet(SSL* ssl) /* Serve the connection -- threadable */ // succède à "connection_handler"
 {   char buf[1024];
     char cmd[200];
+    int *log;
     char *liste_cmd;
     //char reply[1024];
     int sd, bytes;
     //const char* HTMLecho="modifié \n";
  
+    log = (int*)malloc(1*sizeof(int));
+    *(log) = 0;
+
     if ( SSL_accept(ssl) == FAIL )     /* do SSL-protocol accept */
         ERR_print_errors_fp(stderr);
     else
     {
         ShowCerts(ssl);        /* get any certificates */
         //bytes = SSL_read(ssl, buf, sizeof(buf)); /* get request */ // chercher le segfault ici
-	liste_cmd = "Bonjour!\n1- auth pour authentifier\n2- insc pour inscrire\n3- help pour afficher l'aide\n4- quit pour quitter le serveur\nBonne navigation\n";
+	liste_cmd = "Bonjour!\n1- auth pour authentifier\n2- deauth pour de loger\n3- insc pour inscrire\n4- help pour afficher l'aide\n5- quit pour quitter le serveur\nBonne navigation\n";
 	SSL_write(ssl,liste_cmd,strlen(liste_cmd));
         do
 	{
@@ -150,7 +154,7 @@ void Servlet(SSL* ssl) /* Serve the connection -- threadable */ // succède à "
 	      //sprintf(reply, "reçu \n", buf);   /* construct reply */
 	      //SSL_write(ssl, reply, strlen(reply)); /* send reply */
               printf("La commande serveur est %s\n",cmd);
-	      function_to_select(ssl, cmd);
+	      function_to_select(ssl, cmd, log);
               bzero(buf,1024);
 	      bzero(cmd,200);
 

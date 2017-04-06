@@ -344,7 +344,7 @@ int ask(user usr, void *ssl)
 
 
 
-int inlog(user usr,FILE* bdd, void* ssl)
+int inlog(user usr,FILE* bdd, void* ssl, int*login)
 {
    char *log = malloc(20*sizeof(char));
    char *mdp = malloc(20*sizeof(char));
@@ -420,7 +420,7 @@ int inlog(user usr,FILE* bdd, void* ssl)
 	 sprintf(petit_buffer,message);
 	 sprintf(petit_buffer + strlen(petit_buffer),usr.login);
 	 sprintf(petit_buffer + strlen(petit_buffer),"\n");
-
+	 *(login) = 1;
 	 SSL_write(ssl,petit_buffer,strlen(petit_buffer));
 	 return 0;
       }

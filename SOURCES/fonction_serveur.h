@@ -18,7 +18,7 @@ du serveur */
 
 void *connection_handler(void *); // la fonction permettant de créer un thread pour chaque client
 
-int function_to_select(SSL *, char*); // fonction permettant de choisir quelle fonction est à executer suite
+int function_to_select(SSL *, char*, int*); // fonction permettant de choisir quelle fonction est à executer suite
 //à la commande du client, renvoie -1 si aucune fonction ne correspond à la commande écrite
 
 

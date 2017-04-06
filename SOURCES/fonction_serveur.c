@@ -9,7 +9,7 @@
 
 
 
-int function_to_select(SSL *ssl, char *cmd)
+int function_to_select(SSL *ssl, char *cmd, int*log)
 {
    printf("Fonction de choix de la commande IN\n");
 
@@ -38,8 +38,18 @@ int function_to_select(SSL *ssl, char *cmd)
    else if(strcmp(cmd,"auth") == 0)
    {
       printf("Authentification IN\n");
-      authentification_function(ssl);
+      authentification_function(ssl,log);
       printf("Authentification OUT\n");
+      printf("Fonction de choix de la commande OUT\n");
+
+      return 0;  
+   }
+   else if(strcmp(cmd,"deauth") == 0)
+   {
+      printf("Deauthentification IN\n");
+      deauth_function(ssl,log);
+      printf("Deauthentification OUT\n");
+      SSL_write(ssl,"Deco realisee\n",strlen("Deco realisee\n"));
       printf("Fonction de choix de la commande OUT\n");
 
       return 0;  
@@ -80,7 +90,7 @@ int function_to_select(SSL *ssl, char *cmd)
       printf("Fonction de choix de la commande OUT\n");
       return 0;
    }
-   else
+   else if((*(log)) == 1){
       cmd_f = strtok(cmd," ");
       if(strcmp(cmd_f,"ls") == 0)
       {
@@ -150,12 +160,15 @@ int function_to_select(SSL *ssl, char *cmd)
          SSL_write(ssl , message , strlen(message));
       }
 
-      //message = "Entrez une commande valide.\n";
-      //SSL_write(ssl , message , strlen(message));
+	}
+   else{
+      message = "Veuillez vous authentifier..\n";
+      SSL_write(ssl , message , strlen(message));
       printf("Fonction de choix de la commande OUT\n");
       bzero(cat,2048);
       bzero(buf,1024);
       bzero(commande_f,50);
+   }
 	
       
 

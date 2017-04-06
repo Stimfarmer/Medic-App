@@ -170,8 +170,15 @@ int main(int argc, char **argv)
 	       if( strcmp(log[0],"Log") == 0){
 	          printf("Je suis log!!\n");
 	          bzero(user,20);
-	          delete_end_char(log[2],20*sizeof(char),log[2]);
+	          delete_end_char(log[2],1024*sizeof(char),log[2]);
 		  strcpy(user,log[2]);
+               }
+
+	       else if( strcmp(log[0],"Dec") == 0){
+	          printf("Vous etes deco!\n");
+	          bzero(user,20);
+	          //delete_end_char(log[2],1024*sizeof(char),log[2]);
+		  strcpy(user,"You");
                }
             }
 	    

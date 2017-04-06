@@ -31,7 +31,7 @@ int ask(user usr, void *ssl);
 
 int creat_account(FILE*bdd, void* ssl);
 
-int inlog(user usr,FILE* bdd, void* ssl);
+int inlog(user usr,FILE* bdd, void* ssl, int*log);
 
 void delete_account(int nb_secu,FILE* bdd);
 
