@@ -198,24 +198,28 @@ int main(int argc, char **argv)
 	       break;
 	    }
 	
-	    if( strcmp(message,"") != 0){
-
+	    if( strcmp(message,"") != 0)
+	    {
 	    	cmd_vim = strtok(message," "); // on fractionne la chaine pour récupérer l'argument s'il existe
 	    	if(strcmp(cmd_vim,"vim")==0)
 	    	{
-	      	char vim_buf[300];
-	      	argfile=strtok(NULL," ");
-	     	 if ( argfile == NULL ) // si il n'y a pas d'arguments pour vim 
-	      	{
-			sprintf(vim_buf,"/home/esapin/Bureau/PROJET_RESEAU/SOURCES/vim_script.sh"); // mettre le bon path
-			system(vim_buf);
-	      	}
-	      	else
-	      	{
-			sprintf(vim_buf,"/home/esapin/Bureau/PROJET_RESEAU/SOURCES/vim_script.sh %s", argfile); // idem 
-			system(vim_buf);
-	      	}
-	   	 }
+		  printf("\n Chargement de vim distant... \n");
+		  char vim_buf[300];
+		  argfile=strtok(NULL," ");
+		  if ( argfile == NULL ) // si il n'y a pas d'arguments pour vim 
+		  {
+		    sprintf(vim_buf,"/home/romain/PROJET_SYSTEME_RESEAUX/PROJET_SYSTEME_RESEAUX/SOURCES/vim_script.sh %s %s", hostname, server_reply); // mettre le bon path
+		    system(vim_buf);
+		  }
+		  else
+		  {
+		    sprintf(vim_buf,"/home/romain/PROJET_SYSTEME_RESEAUX/PROJET_SYSTEME_RESEAUX/SOURCES/vim_script.sh %s %s %s", hostname, server_reply, argfile); // idem 
+		    system(vim_buf);
+		  }
+	   	bzero(server_reply,2000);
+		bzero(message,1000);
+		continue;
+		}
 	    }
 
             puts("\nServer>");

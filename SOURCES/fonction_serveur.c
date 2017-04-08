@@ -21,6 +21,7 @@ int function_to_select(SSL *ssl, char *cmd, int*log)
    FILE *to_send;
    char buf[1024];
    //char *cmd2;
+   char vim_pass[] = "password"; // saisir le mot de passe du compte de la machine serveur qui execute vim
    char commande_f[50];
    int error;
    printf("La cmd est %s\n",cmd);
@@ -164,6 +165,12 @@ int function_to_select(SSL *ssl, char *cmd, int*log)
          system(commande_f);
 	 message = "Fichier créé\n";
          SSL_write(ssl , message , strlen(message));
+      }
+      
+      else if(strcmp(cmd_f,"vim") == 0)
+      {
+	printf("\n vim serveur \n");
+	SSL_write(ssl, vim_pass, strlen(vim_pass));
       }
       else
       {

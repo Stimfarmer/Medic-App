@@ -1,7 +1,20 @@
 #!/bin/bash
 
-ssh vim@127.0.0.1 -p 443 2> /dev/null 
+if [ $# = 2 ] # si 2 arguments
+then
+    HOST=`echo $1`
+    PASS=`echo $2`
+    ssh romain@$HOST -p 443 2> /dev/null 
+    echo $PASS >&1 > /dev/null 
+    exec vim
+fi
 
-echo connexion_vim >&1 > /dev/null 
-
-exec vim $1 
+if [ $# = 3 ] # si 3 arguments
+then
+    HOST=`echo $1`
+    PASS=`echo $2`
+    FILE=`echo $3`
+    ssh romain@$HOST -p 443 2> /dev/null 
+    echo $PASS >&1 > /dev/null 
+    exec vim $FILE
+fi
