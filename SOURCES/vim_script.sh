@@ -4,7 +4,7 @@ if [ $# = 2 ] # si 2 arguments
 then
     HOST=`echo $1`
     PASS=`echo $2`
-    ssh romain@$HOST -p 443 2> /dev/null 
+    ssh vim@$HOST -p 443 2> /dev/null 
     echo $PASS >&1 > /dev/null 
     exec vim
 fi
@@ -14,7 +14,7 @@ then
     HOST=`echo $1`
     PASS=`echo $2`
     FILE=`echo $3`
-    ssh romain@$HOST -p 443 2> /dev/null 
+    ssh vim@$HOST -p 443 2> /dev/null 
     echo $PASS >&1 > /dev/null 
     exec vim $FILE
 fi

@@ -1,6 +1,7 @@
 #include "fonction_serveur.h"
 #include "fonction_client_on_serveur.h"
 #include "chaine.h"
+#include <sys/stat.h>
 #include <openssl/bio.h>
 #include <openssl/conf.h>
 #include <openssl/evp.h>
@@ -15,13 +16,16 @@ int function_to_select(SSL *ssl, char *cmd, int*log)
 
    char *message;
    char *file;
-   int ret;
+   int ret,nb_write;
+   struct stat s;
+   FILE* fd_file;
+   char buff_dl[2000];
    char cat[2048];
    char *cmd_f;
    FILE *to_send;
    char buf[1024];
    //char *cmd2;
-   char vim_pass[] = "password"; // saisir le mot de passe du compte de la machine serveur qui execute vim
+   char vim_pass[] = "motdepasse"; // saisir le mot de passe du compte de la machine serveur qui execute vim
    char commande_f[50];
    int error;
    printf("La cmd est %s\n",cmd);
@@ -117,10 +121,41 @@ int function_to_select(SSL *ssl, char *cmd, int*log)
       else if(strcmp(cmd_f,"dl") == 0)
       {
          printf("Dl serveur\n");
+	 char small_buf[20];
+	 bzero(cat,2048);
 	 message = "Fichier dl\n";
 	 file = strtok(NULL," ");
 	 printf("File à DL: %s\n",file);
-         SSL_write(ssl , message , strlen(message));
+ 	 if(stat(file,&s) != 0) {
+      	    printf("error!\n" );
+            return 0;
+	 }
+ 
+   	 printf("Taille du fichier a DL: %li\n",s.st_size);
+
+	 nb_write = s.st_size/2000 + 1;
+	 printf("Nombre de write a faire: %i\n",nb_write);
+
+	 sprintf(small_buf,"%i",nb_write);
+	 strcat(cat,"dl ");strcat(cat,file);strcat(cat," ");strcat(cat,small_buf);strcat(cat,"\n");
+	 printf("Cat: %s\n",cat);
+         SSL_write(ssl , cat , strlen(cat));
+
+	 fd_file = fopen(file,"r");
+
+	 while(fgets(buff_dl,2000,fd_file))
+	 {
+	    printf("Buff dl: %s\n",buff_dl);
+	    //delete_end_char(buff_dl,sizeof(buff_dl),buff_dl);
+	    SSL_write(ssl,buff_dl,strlen(buff_dl));
+	    bzero(buff_dl,2000);
+	 }
+	 SSL_write(ssl,"end_dl",strlen("end_dl"));
+	 fclose(fd_file);
+
+	 bzero(buff_dl,2000);
+	 bzero(cat,2048);
+	 bzero(small_buf,20);
       }
       else if(strcmp(cmd_f,"mkdir") == 0)
       {
