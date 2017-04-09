@@ -11,6 +11,7 @@
 #include <openssl/err.h>
 #include "chaine.h"
 #include "strsplit.h"
+#include "cryptage.h"
  
 #define FAIL    -1
  
@@ -103,7 +104,8 @@ void ShowCerts(SSL* ssl)
  
 int main(int argc, char **argv)
 {   SSL_CTX *ctx;
-    int server;
+    int server,compteur_dl=0;
+    FILE *dl_cp;
     char *log[1024];
     //int log_or_not; // 0 = non log 1 = log;
     SSL *ssl;
@@ -113,7 +115,7 @@ int main(int argc, char **argv)
     char message[1000] , server_reply[2000];
     char *argfile;
     char *cmd_vim;
-    char user[20];
+    char user[20],file[20];
 
     strcpy(user,"You");
     
@@ -151,6 +153,12 @@ int main(int argc, char **argv)
 	{
 	    printf("%s>",user);
 	    fgets(message,sizeof(message),stdin);
+
+	    if((strcmp(message,"clear\n")) == 0){
+	    	system("clear");
+	 	continue;
+	    }	    
+
 	    //Send some data
 	    if( SSL_write(ssl , message , strlen(message) ) < 0)
 	    {
@@ -168,18 +176,45 @@ int main(int argc, char **argv)
 	    if( (strsplit(server_reply,log," ")) > 0){
 	       delete_end_char(log[0],sizeof(log[0]),log[0]);
 	       if( strcmp(log[0],"Log") == 0){
-	          printf("Je suis log!!\n");
 	          bzero(user,20);
 	          delete_end_char(log[2],1024*sizeof(char),log[2]);
 		  strcpy(user,log[2]);
                }
 
 	       else if( strcmp(log[0],"Dec") == 0){
-	          printf("Vous etes deco!\n");
 	          bzero(user,20);
 	          //delete_end_char(log[2],1024*sizeof(char),log[2]);
 		  strcpy(user,"You");
                }
+	       else if( strcmp(log[0],"dl") == 0){
+		  printf("Dl d'un fichier...\n");
+		  puts("\nServer>");
+	    	  puts(server_reply);
+	          bzero(server_reply,2000);
+		  //printf("Log[2]: %s\n",log[2]);
+		  sprintf(file,"%i",compteur_dl);
+		  strcat(file,"_dl");
+		  dl_cp = fopen(file,"w");
+
+		  //n = atoi(log[2]);
+		  while(SSL_read(ssl,server_reply,2000))
+		  {
+		     if ((strcmp(server_reply,"end_dl")) == 0)
+		     {
+		        break;
+		     }
+		     fprintf(dl_cp,"%s",server_reply);
+		     bzero(server_reply,2000);
+		  }
+		  fclose(dl_cp);
+		  crypt_simple(file);
+		  printf("New file downloaded: %s\n",file);
+		  compteur_dl++;
+		  bzero(server_reply,2000);
+	    	  bzero(message,1000);
+		  bzero(file,20);
+	 	  continue;
+	       }
             }
 	    
   	    delete_end_char(message,sizeof(message),message);
@@ -191,24 +226,28 @@ int main(int argc, char **argv)
 	       break;
 	    }
 	
-	    if( strcmp(message,"") != 0){
-
+	    if( strcmp(message,"") != 0)
+	    {
 	    	cmd_vim = strtok(message," "); // on fractionne la chaine pour récupérer l'argument s'il existe
 	    	if(strcmp(cmd_vim,"vim")==0)
 	    	{
-	      	char vim_buf[300];
-	      	argfile=strtok(NULL," ");
-	     	 if ( argfile == NULL ) // si il n'y a pas d'arguments pour vim 
-	      	{
-			sprintf(vim_buf,"/home/esapin/Bureau/PROJET_RESEAU/SOURCES/vim_script.sh"); // mettre le bon path
-			system(vim_buf);
-	      	}
-	      	else
-	      	{
-			sprintf(vim_buf,"/home/esapin/Bureau/PROJET_RESEAU/SOURCES/vim_script.sh %s", argfile); // idem 
-			system(vim_buf);
-	      	}
-	   	 }
+		  printf("\n Chargement de vim distant... \n");
+		  char vim_buf[300];
+		  argfile=strtok(NULL," ");
+		  if ( argfile == NULL ) // si il n'y a pas d'arguments pour vim 
+		  {
+		    sprintf(vim_buf,"/home/esapin/Bureau/PROJET_RESEAU/SOURCES/vim_script.sh %s %s", hostname, server_reply); // mettre le bon path
+		    system(vim_buf);
+		  }
+		  else
+		  {
+		    sprintf(vim_buf,"/home/esapin/Bureau/PROJET_RESEAU/SOURCES/vim_script.sh %s %s %s", hostname, server_reply, argfile); // idem 
+		    system(vim_buf);
+		  }
+	   	bzero(server_reply,2000);
+		bzero(message,1000);
+		continue;
+		}
 	    }
 
             puts("\nServer>");
