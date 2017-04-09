@@ -350,6 +350,16 @@ int inlog(user usr,FILE* bdd, void* ssl, int*login)
    char *mdp = malloc(20*sizeof(char));
    char *message ,client_message[2000],msg[100],petit_buffer[50];
    int read_size;
+	
+	time_t rawtime;
+   struct tm *info;
+   time( &rawtime );
+   info = localtime( &rawtime );
+
+
+	FILE *log_history = NULL;
+	log_history = fopen("log.txt","a");
+	fscanf(log_history,"ntm");
  
    usr = alloc_user(usr);
  
@@ -422,9 +432,14 @@ int inlog(user usr,FILE* bdd, void* ssl, int*login)
 	 sprintf(petit_buffer + strlen(petit_buffer),"\n");
 	 *(login) = 1;
 	 SSL_write(ssl,petit_buffer,strlen(petit_buffer));
+	 fclose(log_history);
 	 return 0;
       }
    }
+/*
+	fscanf(log_history,"%s %d:%d:%d %d/%d/%d\n",usr.login,&info->tm_sec,&info->tm_min,&info->tm_hour,&info->tm_mday,&info->tm_mon+1,&info->tm_year+1900);
+	fscanf(log_history,"tamere");*/
+
    printf("Login:%s\n",usr.login);
    printf("Mdp registered:%s\n",usr.mdp);
    printf("Mdp fscanf:%s\n",mdp);
