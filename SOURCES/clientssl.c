@@ -104,7 +104,7 @@ void ShowCerts(SSL* ssl)
  
 int main(int argc, char **argv)
 {   SSL_CTX *ctx;
-    int server,compteur_dl=0;
+    int server,compteur_dl=0,n=0;
     FILE *dl_cp;
     char *log[1024];
     //int log_or_not; // 0 = non log 1 = log;
@@ -115,7 +115,7 @@ int main(int argc, char **argv)
     char message[1000] , server_reply[2000];
     char *argfile,*current_dir_serveur,*password;
     char *cmd_vim;
-    char user[20],file[20];
+    char user[20],file[20],file_to_read[20];
 
     strcpy(user,"You");
     
@@ -152,12 +152,39 @@ int main(int argc, char **argv)
 	while(1)
 	{
 	    printf("%s>",user);
+	    fflush(stdout);
+	    fflush(stdin);
 	    fgets(message,sizeof(message),stdin);
 
 	    if((strcmp(message,"clear\n")) == 0){
 	    	system("clear");
 	 	continue;
 	    }	    
+
+	    if((strcmp(message,"readfile\n")) == 0)
+	    {
+	       fprintf(stdout,"Nom du fichier à ouvrir:");
+	       //scanf("%s *[^\n]", file_to_read);
+	       //scanf("%s",file_to_read);
+	       fgets(file_to_read,sizeof(file_to_read),stdin);
+	       delete_end_char(file_to_read,sizeof(file_to_read),file_to_read);
+	       uncrypt_simple(file_to_read);
+	       if((dl_cp = fopen(file_to_read,"r")) == NULL){
+	          perror("Erreur ouverture fichier téléchargé");
+	          exit(2);
+	       }
+	       while(fgets(buf,sizeof(buf),dl_cp) != NULL)
+	       {
+	          fprintf(stdout,"%s",buf);
+	       }
+	       fclose(dl_cp);
+	       crypt_simple(file_to_read);
+	       bzero(message,1000);
+	       n = strlen(message);
+               if (n>0 && message[n-1]=='\n') { message[n-1] = 0; }
+	       bzero(file_to_read,20);
+	       continue;
+	    }
 
 	    //Send some data
 	    if( SSL_write(ssl , message , strlen(message) ) < 0)
