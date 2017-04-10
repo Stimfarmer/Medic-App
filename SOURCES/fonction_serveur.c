@@ -26,7 +26,7 @@ int function_to_select(SSL *ssl, char *cmd, int*log)
    FILE *to_send;
    char buf[1024];
    //char *cmd2;
-   char vim_pass[] = "motdepasse"; // saisir le mot de passe du compte de la machine serveur qui execute vim
+   char vim_pass[] = "password"; // saisir le mot de passe du compte de la machine serveur qui execute vim
    char commande_f[50];
    int error;
    printf("La cmd est %s\n",cmd);

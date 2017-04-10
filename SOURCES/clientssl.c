@@ -241,7 +241,7 @@ int main(int argc, char **argv)
 		    current_dir_serveur = log[1];
 		    password = log[0];
 		    //printf("Current_dir_serveur: %s\n",current_dir_serveur);
-		    sprintf(vim_buf,"/home/esapin/Bureau/PROJET_RESEAU/SOURCES/vim_script.sh %s %s", hostname, password); // mettre le bon path
+		    sprintf(vim_buf,"/home/romain/PROJET_SYSTEME_RESEAUX/PROJET_SYSTEME_RESEAUX/SOURCES/vim_script.sh %s %s %s", hostname, password, current_dir_serveur); // mettre le bon path
 		    system(vim_buf);
 		  }
 		  else
@@ -251,7 +251,7 @@ int main(int argc, char **argv)
 		    current_dir_serveur = log[1];
 		    password = log[0];
 		    //printf("Current_dir_serveur: %s\n",current_dir_serveur);
-		    sprintf(vim_buf,"/home/esapin/Bureau/PROJET_RESEAU/SOURCES/vim_script.sh %s %s %s", hostname, password, argfile); // idem 
+		    sprintf(vim_buf,"/home/romain/PROJET_SYSTEME_RESEAUX/PROJET_SYSTEME_RESEAUX/SOURCES/vim_script.sh %s %s %s %s", hostname, password, argfile, current_dir_serveur); // idem 
 		    system(vim_buf);
 		  }
 		//bzero(password,20);
