@@ -113,7 +113,7 @@ int main(int argc, char **argv)
     int bytes;
     char *hostname, *portnum;
     char message[1000] , server_reply[2000];
-    char *argfile;
+    char *argfile,*current_dir_serveur,*password;
     char *cmd_vim;
     char user[20],file[20];
 
@@ -236,14 +236,25 @@ int main(int argc, char **argv)
 		  argfile=strtok(NULL," ");
 		  if ( argfile == NULL ) // si il n'y a pas d'arguments pour vim 
 		  {
-		    sprintf(vim_buf,"/home/esapin/Bureau/PROJET_RESEAU/SOURCES/vim_script.sh %s %s", hostname, server_reply); // mettre le bon path
+		    //printf("Server_reply: %s\n",server_reply);
+		    strsplit(server_reply,log," ");
+		    current_dir_serveur = log[1];
+		    password = log[0];
+		    //printf("Current_dir_serveur: %s\n",current_dir_serveur);
+		    sprintf(vim_buf,"/home/esapin/Bureau/PROJET_RESEAU/SOURCES/vim_script.sh %s %s", hostname, password); // mettre le bon path
 		    system(vim_buf);
 		  }
 		  else
 		  {
-		    sprintf(vim_buf,"/home/esapin/Bureau/PROJET_RESEAU/SOURCES/vim_script.sh %s %s %s", hostname, server_reply, argfile); // idem 
+		    //printf("Server_reply: %s\n",server_reply);
+		    strsplit(server_reply,log," ");
+		    current_dir_serveur = log[1];
+		    password = log[0];
+		    //printf("Current_dir_serveur: %s\n",current_dir_serveur);
+		    sprintf(vim_buf,"/home/esapin/Bureau/PROJET_RESEAU/SOURCES/vim_script.sh %s %s %s", hostname, password, argfile); // idem 
 		    system(vim_buf);
 		  }
+		//bzero(password,20);
 	   	bzero(server_reply,2000);
 		bzero(message,1000);
 		continue;

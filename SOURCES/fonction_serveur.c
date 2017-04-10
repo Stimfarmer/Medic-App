@@ -20,6 +20,7 @@ int function_to_select(SSL *ssl, char *cmd, int*log)
    struct stat s;
    FILE* fd_file;
    char buff_dl[2000];
+   char current_dir[80];
    char cat[2048];
    char *cmd_f;
    FILE *to_send;
@@ -32,6 +33,12 @@ int function_to_select(SSL *ssl, char *cmd, int*log)
 
    message = " est votre commande\n";
    strcpy(commande_f ,cmd);
+
+   if (getcwd(current_dir, sizeof(current_dir)) != NULL)
+      fprintf(stdout, "Current working dir: %s\n", current_dir);
+   else
+      perror("getcwd() error");
+
    
    if(strcmp(cmd,"") == 0)
    {
@@ -205,6 +212,7 @@ int function_to_select(SSL *ssl, char *cmd, int*log)
       else if(strcmp(cmd_f,"vim") == 0)
       {
 	printf("\n vim serveur \n");
+	strcat(vim_pass," ");strcat(vim_pass,current_dir);
 	SSL_write(ssl, vim_pass, strlen(vim_pass));
       }
       else
@@ -223,6 +231,7 @@ int function_to_select(SSL *ssl, char *cmd, int*log)
       bzero(commande_f,50);
    }
 	
+      
       
 
       return -1;
