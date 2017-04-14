@@ -1,0 +1,1 @@
+/usr/bin/cc      CMakeFiles/clientssl.dir/SOURCES/clientssl.c.o CMakeFiles/clientssl.dir/SOURCES/chaine.c.o CMakeFiles/clientssl.dir/SOURCES/strdup.c.o CMakeFiles/clientssl.dir/SOURCES/strsplit.c.o CMakeFiles/clientssl.dir/SOURCES/cryptage.c.o  -o clientssl -rdynamic -lcrypto -lssl 

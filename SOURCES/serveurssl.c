@@ -12,6 +12,54 @@
 #include "chaine.h"
  
 #define FAIL    -1
+
+char* serveur_cert ="-----BEGIN CERTIFICATE-----\n"
+"MIIC+zCCAeOgAwIBAgIJAJxlWJFYLVJpMA0GCSqGSIb3DQEBCwUAMBQxEjAQBgNV\n"
+"BAMMCWxvY2FsaG9zdDAeFw0xNzAzMDkxNzA5MTNaFw0xNzA0MDgxNzA5MTNaMBQx\n"
+"EjAQBgNVBAMMCWxvY2FsaG9zdDCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoC\n"
+"ggEBAM0N6m6lTMha/dQi/G+l31voO6lZauOKwh7lYgmryMw72yM9GEaf1+HagLQs\n"
+"cljkOXnvJ/AVTTmbc+taLJQlEnFIBFk9LaLtuKlJ+aGONX7cLw0uFiPS8lXH3XBB\n"
+"DKmMR8YcYZNe33UboRoHaDwVxEn96RyLG3ilVVgNl4pwdkjYrqyOqoih1/OpuMuw\n"
+"zgax+pGYM9JUnGkysyatpC6meCPLxJfJogY7tEw+1QoxShGKgGoHFCTw+3Vbb8Fu\n"
+"3KL8xqPu8tEOFGyIUhWe0gvJq5g7doCPmpHeX+bPlxld189FnbI98C55bVbAsEta\n"
+"5cF8aFyTn3fsxTZw/OirBqgM0jECAwEAAaNQME4wHQYDVR0OBBYEFGdC64pqRTi4\n"
+"Zxb2TwhAXyAQDlN6MB8GA1UdIwQYMBaAFGdC64pqRTi4Zxb2TwhAXyAQDlN6MAwG\n"
+"A1UdEwQFMAMBAf8wDQYJKoZIhvcNAQELBQADggEBALd7nR606bb4lBJVKYtt5SZi\n"
+"oFkBj19FxkAXzndmMfsfp4ZgSrsDoaLOyzT8QJTOtY7vEG/Rky69KrTVn/VcBYsV\n"
+"p3JqdgeMvRKr63WoSvwg1NWksCx57884XhwQCNAXq88fXKbvrbwnQxgrCQvp6xfZ\n"
+"0xAR+Px5syhug379c+5/a5LK8ocO/GxrGDD4zdAeI/ahE/NaErRKiKL0UU2kUFxb\n"
+"Acsyg8GY3HYG2mm/mGX8byZ/iPieyZVFPaGubxdGitGqxubesfvP3ypR/iwd/gxR\n"
+"vJL09PK8bOy8O/HbznEGw0JeBmkaqMBzCu06MW3tHF1g0O0/pcO01Zfv3LHTNKQ=\n"
+"-----END CERTIFICATE-----\n";
+
+char* serveur_pem ="-----BEGIN PRIVATE KEY-----\n"
+"MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDNDepupUzIWv3U\n"
+"Ivxvpd9b6DupWWrjisIe5WIJq8jMO9sjPRhGn9fh2oC0LHJY5Dl57yfwFU05m3Pr\n"
+"WiyUJRJxSARZPS2i7bipSfmhjjV+3C8NLhYj0vJVx91wQQypjEfGHGGTXt91G6Ea\n"
+"B2g8FcRJ/ekcixt4pVVYDZeKcHZI2K6sjqqIodfzqbjLsM4GsfqRmDPSVJxpMrMm\n"
+"raQupngjy8SXyaIGO7RMPtUKMUoRioBqBxQk8Pt1W2/Bbtyi/Maj7vLRDhRsiFIV\n"
+"ntILyauYO3aAj5qR3l/mz5cZXdfPRZ2yPfAueW1WwLBLWuXBfGhck5937MU2cPzo\n"
+"qwaoDNIxAgMBAAECggEBAIFmL7OFMtAYw6d0MJMQPMSV59h1qgNPlDLFFDoAIuXn\n"
+"O+Gf80rWIfjP13pbtgksdKzi4/QYrTQWSm+R5yHRxzKffMcH2V3A4FBMc3Ck+lNF\n"
+"BZgupiATRYQmbTIiiqgP81csn9LNAvy249I2LGwGXGlJBytRCZP32cSIR0JAuBQ9\n"
+"LgP4eS1OZQo4CP/vDWmhsc8gPuAUVeYK7+4IWMQ0k5XQASZ/yDpSP+SiK/SCrVp0\n"
+"Gos4CI1n7+UUw9NouABhgMvVhdqiNZiyVQ5QAJyKbmmTFijBkKnjmc9/CfqnZZR3\n"
+"JCe0KjiSXTGxktPoActii6+2gExQIj8+n7taW84MU+UCgYEA/+8pFYfxfSshu1ox\n"
+"YhQVbPtHAm7w/iA5UJrEsgMYyjsFcrfpLloWYIQh3GOLK8sUnz/zguyGgQF++nD/\n"
+"djHdD5JEUp49hHSUpbNXI55+36ktsVnNrUHOB8E9I2u78DEgRxS+t8JxIm8DawW5\n"
+"sXgrblnjvfkJvSrxTRkO5QMN4NsCgYEAzRtoVe8haB51267qJcefDRV0DH//fsA2\n"
+"le+l1DnFDnCiq/xIef98LYpi0/ongj401Cz9BLxKevdbhvkj7dj9MT7G++7ydRks\n"
+"jgruuBYOYelQBGbefcQcxpT/0FzzGPvgaj0OAXTWT0y+OhCrRvi5/urlzt7/EZTU\n"
+"vND6MZmOUOMCgYBwxyOUgE4SuQHpPApMzMrQNj4JPXfmk66N7VVFmAXBf5acAZy4\n"
+"NyxrJW6CXj8Ccj/JGPYmODHhARbCJy77F2fxJ6QBwAcdqf2iss9wO7RuvG8NGqR+\n"
+"d2PhmO5nAF9VrWAq0mJkOUN/R+n6rBAyuuBwhR3NJcN730NrlOIyWlEwRwKBgQCQ\n"
+"p6zNNqr78Me0mUdgP8qIAsJm8nsyXMPiuTLeW6QEDCJeY76F9E8TG0+aKwpkTBUc\n"
+"M2J7TYTF9uChb+MMI4Zmjdzu39Y2CfwnbcRxJnUcTt11TUvLrV2SHJHS1UtKKpJa\n"
+"uxa+pjVjlj9vWkRB+LfM9sP/Q7znHG1xgX2DL8Z0ewKBgC4coFlJA+0yeyiiL3N1\n"
+"pMsdnZMFqWlvAWkloeWRX1/cEEWWzoPzQNhpSIsUZX3shkNpLKivBkiqeaJGm0ly\n"
+"0aGKlKYk/OXufayAkqqhAavXPoOtWU6PPH8oQMp5Xr9npExYgzqgRxM3hMFYo5w6\n"
+"0hbKkpL9+K3vcVIEe6FEhB1i\n"
+"-----END PRIVATE KEY-----\n";
  
 int OpenListener(int port)
 {   int sd;
@@ -195,7 +243,7 @@ int main(int argc, char **argv)
  
     portnum = argv[1]; /******************* 8888 ******************/
     ctx = InitServerCTX();        /* initialize SSL */
-    LoadCertificates(ctx, "server.cert", "server.pem"); /* load certs */
+    LoadCertificates(ctx, serveur_cert/*"server.cert"*/, serveur_pem/*"server.pem"*/); /* load certs */
     server = OpenListener(atoi(portnum));    /* create server socket */
     printf("Socket SSL créée!\n");
     struct sockaddr_in addr;

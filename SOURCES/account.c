@@ -352,9 +352,9 @@ int inlog(user usr,FILE* bdd, void* ssl, int*login)
    int read_size;
 	
 	time_t rawtime;
-   struct tm *info;
+   //struct tm *info;
    time( &rawtime );
-   info = localtime( &rawtime );
+   //info = localtime( &rawtime );
 
 
 	FILE *log_history = NULL;

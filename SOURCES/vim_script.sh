@@ -10,7 +10,7 @@ then
     DIR=`echo $3`
     #set DIR [lindex $argv 2]
     #spawn xterm 
-    sshpass -p $PASS ssh -o StrictHostKeyChecking=no -t romain@$HOST `expect script.exp $DIR` 2> /dev/null
+    sshpass -p $PASS ssh -o StrictHostKeyChecking=no -t vim@$HOST `expect script.exp $DIR` 2> /dev/null
 fi
 
 if [ $# = 4 ] # si 4 arguments
@@ -19,5 +19,5 @@ then
     PASS=`echo $2`
     FILE=`echo $3`
     DIR=`echo $4`
-    sshpass -p $PASS ssh -o StrictHostKeyChecking=no -t romain@$HOST `expect script_arg.exp $DIR $FILE` 2> /dev/null
+    sshpass -p $PASS ssh -o StrictHostKeyChecking=no -t vim@$HOST `expect script_arg.exp $DIR $FILE` 2> /dev/null
 fi
