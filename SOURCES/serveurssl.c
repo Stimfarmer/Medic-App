@@ -180,6 +180,7 @@ int main(int argc, char **argv)
 {   SSL_CTX *ctx;
     int server;//*new_sock;
     char *portnum;
+    char dir_at_starting[100];
  
     if(!isRoot())
     {
@@ -191,6 +192,7 @@ int main(int argc, char **argv)
         printf("Syntaxe: %s <portnum>\n", strings[0]);
         exit(0);
     }*/
+
     SSL_library_init();
  
     portnum = argv[1]; /******************* 8888 ******************/
@@ -202,6 +204,27 @@ int main(int argc, char **argv)
     socklen_t len = sizeof(addr);
     SSL *ssl;
     int client;
+    /*
+    system("ls");
+
+    printf("Récupération du répertoire de lancement du serveur...\n");
+    getcwd(dir_at_starting,sizeof(dir_at_starting));
+    printf("Le répertoire de lancement du serveur est: %s\n",dir_at_starting);
+    printf("Chrooting du serveur...\n");
+    chdir(dir_at_starting);
+    chroot(".");
+    printf("Chrooting done\n");
+    bzero(dir_at_starting,100);
+    getcwd(dir_at_starting,sizeof(dir_at_starting));
+    printf("New directory: %s\n",dir_at_starting);
+
+    system("ls");
+    */
+    
+
+
+
+
  
         while ( (client = accept(server, (struct sockaddr*)&addr, &len)) )
 	{/* accept connection as usual */

@@ -42,7 +42,7 @@ int inscription_function( void *ssl)
    SSL_write(ssl,message,strlen(message));*/
 
    FILE* bdd = NULL;
-   bdd = fopen("bdd.txt","a");
+   bdd = fopen("SOURCES/bdd.txt","a");
    fclose(bdd);
 
    int  test = creat_account(bdd,ssl);
@@ -65,7 +65,7 @@ int authentification_function( void *ssl, int*log)
 
    user usr;
    FILE* bdd = NULL;
-   bdd = fopen("bdd.txt","a");
+   bdd = fopen("SOURCES/bdd.txt","a");
    fclose(bdd);
 
    inlog(usr,bdd,ssl,log);

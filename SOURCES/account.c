@@ -76,7 +76,7 @@ int nb_lines(FILE* bdd)
 {
    int cursor = 0;
    int nb_lignes = 0;
-   bdd = fopen("bdd.txt","r");
+   bdd = fopen("SOURCES/bdd.txt","r");
    if(bdd != NULL)
    {
       while ((cursor = getc(bdd)) != EOF)
@@ -101,7 +101,7 @@ int nb_lines(FILE* bdd)
 void search_log(char *log,int number,char *stck)
 {
 	FILE *bdd = NULL;
-   bdd = fopen("bdd.txt","r");
+   bdd = fopen("SOURCES/bdd.txt","r");
   
   
    int dust1;
@@ -358,13 +358,13 @@ int inlog(user usr,FILE* bdd, void* ssl, int*login)
 
 
 	FILE *log_history = NULL;
-	log_history = fopen("log.txt","a");
+	log_history = fopen("SOURCES/log.txt","a");
 	fscanf(log_history,"ntm");
  
    usr = alloc_user(usr);
  
    int cursor;
-   bdd = fopen("bdd.txt","r");
+   bdd = fopen("SOURCES/bdd.txt","r");
    
    do
    {
@@ -498,7 +498,7 @@ int creat_account(FILE*bdd, void* ssl)
 
    nb_secu = ask(usr, ssl);
 
-   bdd = fopen("bdd.txt","r");
+   bdd = fopen("SOURCES/bdd.txt","r");
    while((cursor = fgetc(bdd)) != EOF)
    {
       fscanf(bdd,"%d %s %s %s %s %s %s",&verif,dust1,dust2,dust3,dust4,dust5,dust6);
@@ -550,13 +550,13 @@ int creat_account(FILE*bdd, void* ssl)
       }
    }
     
-   int ret1 = remove("bdd.txt");
+   int ret1 = remove("SOURCES/bdd.txt");
    if(ret1 != 0)
    {
       printf("ERREUR: Suppression fichier creat\n");
    }
    
-   int ret2 = rename("tmp.txt","bdd.txt");
+   int ret2 = rename("tmp.txt","SOURCES/bdd.txt");
    if(ret2 != 0)
    {
       printf("ERREUR: Rename fichier creat\n");
@@ -591,7 +591,7 @@ void delete_account(int nb_secu,FILE* bdd)
    char *dust5 = malloc(20*sizeof(char));
    char *dust6 = malloc(20*sizeof(char));
    
-   bdd = fopen("bdd.txt","r");
+   bdd = fopen("SOURCES/bdd.txt","r");
    FILE * tmp = NULL;
    tmp = fopen("tmp.txt","a");
 
@@ -623,13 +623,13 @@ void delete_account(int nb_secu,FILE* bdd)
    }
 
 
-   int ret1 = remove("bdd.txt");
+   int ret1 = remove("SOURCES/bdd.txt");
    if(ret1 !=0)
    {
       printf("\nERREUR: suppression fichier delete\n");
    }
    
-   int ret2 = rename("tmp.txt","bdd.txt");
+   int ret2 = rename("tmp.txt","SOURCES/bdd.txt");
    if(ret2 != 0)
    {
       printf("\nERREUR:changement nom fichier delete\n");

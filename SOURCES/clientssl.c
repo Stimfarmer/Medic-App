@@ -131,6 +131,8 @@ int main(int argc, char **argv)
     hostname=argv[1];
     portnum=argv[2];
  
+    printf("Xd\n");
+
     ctx = InitCTX();
     LoadCertificates(ctx, "SOURCES/client.crt", "SOURCES/client.key");
     server = OpenConnection(hostname, atoi(portnum));

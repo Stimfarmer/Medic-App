@@ -107,6 +107,7 @@ int function_to_select(SSL *ssl, char *cmd, int*log)
       cmd_f = strtok(cmd," ");
       if(strcmp(cmd_f,"ls") == 0)
       {
+	 system("ls -al");
          printf("Ls serveur\n");
 	 bzero(cat,2048);
 	 printf("Commande_f: %s\n",commande_f);
