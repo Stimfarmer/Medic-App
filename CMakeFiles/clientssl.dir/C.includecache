@@ -6,16 +6,6 @@
 
 #IncludeRegexTransform: 
 
-/home/esapin/Bureau/PROJET_RESEAU/SOURCES/chaine.c
-chaine.h
-/home/esapin/Bureau/PROJET_RESEAU/SOURCES/chaine.h
-stdio.h
--
-ctype.h
--
-string.h
--
-
 /home/esapin/Bureau/PROJET_RESEAU/SOURCES/chaine.h
 
 /home/esapin/Bureau/PROJET_RESEAU/SOURCES/clientssl.c
@@ -48,37 +38,7 @@ strsplit.h
 cryptage.h
 /home/esapin/Bureau/PROJET_RESEAU/SOURCES/cryptage.h
 
-/home/esapin/Bureau/PROJET_RESEAU/SOURCES/cryptage.c
-cryptage.h
 /home/esapin/Bureau/PROJET_RESEAU/SOURCES/cryptage.h
-stdio.h
--
-string.h
--
-stdlib.h
--
-
-/home/esapin/Bureau/PROJET_RESEAU/SOURCES/cryptage.h
-
-/home/esapin/Bureau/PROJET_RESEAU/SOURCES/strdup.c
-stdlib.h
--
-string.h
--
-strdup.h
-/home/esapin/Bureau/PROJET_RESEAU/SOURCES/strdup.h
-
-/home/esapin/Bureau/PROJET_RESEAU/SOURCES/strdup.h
-
-/home/esapin/Bureau/PROJET_RESEAU/SOURCES/strsplit.c
-stdlib.h
--
-string.h
--
-strsplit.h
-/home/esapin/Bureau/PROJET_RESEAU/SOURCES/strsplit.h
-strdup.h
-/home/esapin/Bureau/PROJET_RESEAU/SOURCES/strdup.h
 
 /home/esapin/Bureau/PROJET_RESEAU/SOURCES/strsplit.h
 
