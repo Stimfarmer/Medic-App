@@ -4,7 +4,8 @@ Le projet est écrit en langage C.
 Aucune licence n'est définie.
 
 # COMPILATION:
-Faire make 
+Faire cmake CMakeLists.txt
+Puis make
 
 # VIM : 
 vim déclenche à présent nano --> pas de lag au lancement !
