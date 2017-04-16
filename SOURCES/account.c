@@ -165,31 +165,31 @@ int ask(user usr, void *ssl)
    
    do 
    {
-     message = "Veuillez remplir les champs necessaires a la creation de votre compte\nSaisir votre nom\n";
+      message = "Veuillez remplir les champs necessaires a la creation de votre compte\nSaisir votre nom\n";
 
-     SSL_write(ssl,message,strlen(message));
+      SSL_write(ssl,message,strlen(message));
 
      
-     read_size = SSL_read(ssl , client_message , sizeof(client_message));
+      read_size = SSL_read(ssl , client_message , sizeof(client_message));
 
-     if((delete_end_char(msg,sizeof(msg),client_message))==-1)
-     {
-        perror("Erreur supression caractère de fin!");
-        return -1;
-     }
-     read_size=strlen(msg);
+      if((delete_end_char(msg,sizeof(msg),client_message))==-1)
+      {
+         perror("Erreur supression caractère de fin!");
+         return -1;
+      }
+      read_size=strlen(msg);
      
-     recup_result_chaine=is_alpha(msg);
+      recup_result_chaine=is_alpha(msg);
 
-     printf("Read size: %i\n",read_size);
-     printf("Recup result chaine: %i\n",recup_result_chaine);
+      printf("Read size: %i\n",read_size);
+      printf("Recup result chaine: %i\n",recup_result_chaine);
 
-     strcpy(usr.name,msg);
+      strcpy(usr.name,msg);
 
-     printf("Name:%s\n",usr.name);  
+      printf("Name:%s\n",usr.name);  
 
-     bzero(client_message,2000);
-     bzero(msg,100);
+      bzero(client_message,2000);
+      bzero(msg,100);
    }while((read_size <= 0) || (recup_result_chaine == -1));
 
    do 
@@ -210,7 +210,7 @@ int ask(user usr, void *ssl)
       recup_result_chaine=is_alpha(msg);
 
       printf("Read size: %i\n",read_size);
-     printf("Recup result chaine: %i\n",recup_result_chaine);
+      printf("Recup result chaine: %i\n",recup_result_chaine);
 
       strcpy(usr.surname,msg);
 
@@ -233,14 +233,28 @@ int ask(user usr, void *ssl)
          perror("Erreur supression caractère de fin!");
          return -1;
       }
-     read_size=strlen(msg);
+      read_size=strlen(msg);
 
       recup_result_chaine=is_alpha(msg);
 
-     printf("Read size: %i\n",read_size);
-     printf("Recup result chaine: %i\n",recup_result_chaine);
+      printf("Read size: %i\n",read_size);
+      printf("Recup result chaine: %i\n",recup_result_chaine);
 
       strcpy(usr.fonction,msg);
+
+
+      if(strcmp(usr.fonction,"medecin")==0)
+      {
+         usr.droit = 'm';
+      }
+      if(strcmp(usr.fonction,"root")==0)
+      {
+         usr.droit = 'r';
+      }
+      if(strcmp(usr.fonction,"infirmiere")==0)
+      {
+         usr.droit = 'i';
+      }
 
       printf("Fonction:%s\n",usr.fonction);
 
@@ -261,12 +275,12 @@ int ask(user usr, void *ssl)
          perror("Erreur supression caractère de fin!");
          return -1;
       }
-     read_size=strlen(msg);
+      read_size=strlen(msg);
 
-     recup_result_chaine=is_num(msg);
+      recup_result_chaine=is_num(msg);
 
-     printf("Read size: %i\n",read_size);
-     printf("Recup result chaine: %i\n",recup_result_chaine);
+      printf("Read size: %i\n",read_size);
+      printf("Recup result chaine: %i\n",recup_result_chaine);
 
       usr.nb_secu = atoi(msg);
 
@@ -289,11 +303,11 @@ int ask(user usr, void *ssl)
          perror("Erreur supression caractère de fin!");
          return -1;
       }
-     read_size=strlen(msg);
-     recup_result_chaine=is_alnum(msg);
+      read_size=strlen(msg);
+      recup_result_chaine=is_alnum(msg);
 
-     printf("Read size: %i\n",read_size);
-     printf("Recup_result_chaine: %i\n",recup_result_chaine);
+      printf("Read size: %i\n",read_size);
+      printf("Recup_result_chaine: %i\n",recup_result_chaine);
 
       strcpy(usr.mdp,msg);
 
@@ -368,11 +382,11 @@ int inlog(user usr,FILE* bdd, void* ssl, int*login)
    
    do
    {
-   message = "Veuillez remplir les champs necessaires a l'authentification\nSaisir votre login\n";
+      message = "Veuillez remplir les champs necessaires a l'authentification\nSaisir votre login\n";
 
-   SSL_write(ssl,message,strlen(message));
+      SSL_write(ssl,message,strlen(message));
 
-   read_size = SSL_read(ssl , client_message , sizeof(client_message));
+      read_size = SSL_read(ssl , client_message , sizeof(client_message));
 
    if((delete_end_char(msg,sizeof(msg),client_message))==-1)
    {
@@ -380,9 +394,9 @@ int inlog(user usr,FILE* bdd, void* ssl, int*login)
       return -1;
    }
 
-     read_size=strlen(msg);
+   read_size=strlen(msg);
 
-     printf("Read size: %i\n",read_size);
+   printf("Read size: %i\n",read_size);
 
    strcpy(usr.login,msg);
 
@@ -406,16 +420,16 @@ int inlog(user usr,FILE* bdd, void* ssl, int*login)
       perror("Erreur supression caractère de fin!");
       return -1;
    }
-     read_size=strlen(msg);
+      read_size=strlen(msg);
 
-     printf("Read size: %i\n",read_size);
+      printf("Read size: %i\n",read_size);
 
-   strcpy(usr.mdp,msg);
+      strcpy(usr.mdp,msg);
 
-   printf("Mdp:%s\n",usr.mdp);
+      printf("Mdp:%s\n",usr.mdp);
 
-   bzero(client_message,2000);
-   bzero(msg,100);
+      bzero(client_message,2000);
+      bzero(msg,100);
    }while( read_size <= 0);
 
 
@@ -424,16 +438,30 @@ int inlog(user usr,FILE* bdd, void* ssl, int*login)
       fscanf(bdd,"%d %s %s %s %s %s %s",&usr.nb_secu,usr.name,usr.surname,usr.fonction,log,mdp,usr.year);
       if(strcmp(log,usr.login)==0 && strcmp(mdp,usr.mdp) == 0)
       {
-	 printf("\nLOG IN SUCCESS\n");
-	 message = "\nLog as ";
-	 bzero(petit_buffer,50);
-	 sprintf(petit_buffer,message);
-	 sprintf(petit_buffer + strlen(petit_buffer),usr.login);
-	 sprintf(petit_buffer + strlen(petit_buffer),"\n");
-	 *(login) = 1;
-	 SSL_write(ssl,petit_buffer,strlen(petit_buffer));
-	 fclose(log_history);
-	 return 0;
+      	printf("\nLOG IN SUCCESS\n");
+      	message = "\nLog as ";
+
+         if(strcmp(usr.fonction,"medecin")==0)
+         {
+            usr.droit = 'm';
+         }
+         if(strcmp(usr.fonction,"root")==0)
+         {
+            usr.droit = 'r';
+         }
+         if(strcmp(usr.fonction,"infirmiere")==0)
+         {
+            usr.droit = 'i';
+         }
+
+      	bzero(petit_buffer,50);
+      	sprintf(petit_buffer,message);
+      	sprintf(petit_buffer + strlen(petit_buffer),usr.login);
+      	sprintf(petit_buffer + strlen(petit_buffer),"\n");
+      	*(login) = 1;
+      	SSL_write(ssl,petit_buffer,strlen(petit_buffer));
+      	fclose(log_history);
+      	return 0;
       }
    }
 /*

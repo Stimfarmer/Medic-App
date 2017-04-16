@@ -15,6 +15,7 @@ typedef struct{
    char *mdp;
    char *login;
    char *year;
+   char droit;
 } user;
 
 void init_user(user usr);

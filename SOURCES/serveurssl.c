@@ -138,38 +138,37 @@ void Servlet(SSL* ssl) /* Serve the connection -- threadable */ // succède à "
     {
         ShowCerts(ssl);        /* get any certificates */
         //bytes = SSL_read(ssl, buf, sizeof(buf)); /* get request */ // chercher le segfault ici
-	liste_cmd = "Bonjour!\n1- auth pour authentifier\n2- deauth pour de loger\n3- insc pour inscrire\n4- help pour afficher l'aide\n5- quit pour quitter le serveur\nBonne navigation\n";
-	SSL_write(ssl,liste_cmd,strlen(liste_cmd));
+        liste_cmd = "Bonjour!\n1- auth pour authentifier\n2- deauth pour de loger\n3- insc pour inscrire\n4- help pour afficher l'aide\n5- quit pour quitter le serveur\nBonne navigation\n";
+        SSL_write(ssl,liste_cmd,strlen(liste_cmd));
         do
-	{
-	  bytes = SSL_read(ssl, buf, sizeof(buf));
-	  if ( bytes > 0 )
-	  {
-	      if((delete_end_char(cmd,sizeof(cmd),buf))==-1)
-	      {
-		perror("Erreur supression caractère de fin!");
-		break;
-	      }
-              printf("Client msg: !%s!\n", buf);
-	      //sprintf(reply, "reçu \n", buf);   /* construct reply */
-	      //SSL_write(ssl, reply, strlen(reply)); /* send reply */
-              printf("La commande serveur est %s\n",cmd);
-	      function_to_select(ssl, cmd, log);
-              bzero(buf,1024);
-	      bzero(cmd,200);
+        {
+            bytes = SSL_read(ssl, buf, sizeof(buf));
+            if ( bytes > 0 )
+            {
+                if((delete_end_char(cmd,sizeof(cmd),buf))==-1)
+                {
+                    perror("Erreur supression caractère de fin!");
+                    break;
+                }
+                printf("Client msg: !%s!\n", buf);
+                //sprintf(reply, "reçu \n", buf);   /* construct reply */
+                //SSL_write(ssl, reply, strlen(reply)); /* send reply */
+                printf("La commande serveur est %s\n",cmd);
+                function_to_select(ssl, cmd, log);
+                bzero(buf,1024);
+                bzero(cmd,200);
 
-	      //bytes = SSL_read(ssl, buf, sizeof(buf));
-	  }
-	  else
-	  {
+                //bytes = SSL_read(ssl, buf, sizeof(buf));
+            }
+            else
+            {
 
-	      ERR_print_errors_fp(stderr);
-	      break;
-	  }
+                ERR_print_errors_fp(stderr);
+                break;
+            }
 	  
-	      
-	}
-	while(bytes > 0);
+        }
+        while(bytes > 0);
     }
     sd = SSL_get_fd(ssl);       /* get socket connection */
     //SSL_free(ssl);         /* release SSL state */
@@ -227,22 +226,22 @@ int main(int argc, char **argv)
 
  
         while ( (client = accept(server, (struct sockaddr*)&addr, &len)) )
-	{/* accept connection as usual */
-	  printf("Connection: %s: %d\n",inet_ntoa(addr.sin_addr), ntohs(addr.sin_port));
-	  ssl = SSL_new(ctx);              /* get new SSL state with context */
-	  SSL_set_fd(ssl, client);      /* set connection socket to SSL state */
-	  //ShowCerts(ssl);
-	  pthread_t sniffer_thread;
-	  /*new_ssl = malloc(1);
-	  *new_sock = client;*/
+        {/* accept connection as usual */
+            printf("Connection: %s: %d\n",inet_ntoa(addr.sin_addr), ntohs(addr.sin_port));
+            ssl = SSL_new(ctx);              /* get new SSL state with context */
+            SSL_set_fd(ssl, client);      /* set connection socket to SSL state */
+            //ShowCerts(ssl);
+            pthread_t sniffer_thread;
+            /*new_ssl = malloc(1);
+            *new_sock = client;*/
 	  
-	  if( (pthread_create( &sniffer_thread , NULL ,  (void*)(Servlet) , (void*) ssl)) < 0)
-	  {
-	      perror("Impossible de créer un thread");
-	      return 1;
-	  }
-	  //Servlet(ssl);/* service connection */
-	}
+            if( (pthread_create( &sniffer_thread , NULL ,  (void*)(Servlet) , (void*) ssl)) < 0)
+            {
+                perror("Impossible de créer un thread");
+                return 1;
+            }
+            //Servlet(ssl);/* service connection */
+        }
     
     close(server);          /* close server socket */
     SSL_CTX_free(ctx);
