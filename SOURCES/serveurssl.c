@@ -234,7 +234,7 @@ int main(int argc, char **argv)
             pthread_t sniffer_thread;
             /*new_ssl = malloc(1);
             *new_sock = client;*/
-	  
+	
             if( (pthread_create( &sniffer_thread , NULL ,  (void*)(Servlet) , (void*) ssl)) < 0)
             {
                 perror("Impossible de créer un thread");

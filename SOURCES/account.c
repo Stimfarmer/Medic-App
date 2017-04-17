@@ -39,6 +39,30 @@ void init_user(user usr)
    usr.login = "amarchan";
    printf("%s %s %d %s\n",usr.name,usr.fonction,usr.nb_secu,usr.mdp);
 }
+
+void generate_passwd(user usr)
+{
+   char list[]="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz\0";
+   char *password = malloc(20*sizeof(char));
+   int i;
+   
+   int a = 0;
+   int b = 51;
+   int nb;
+   srand(time(NULL));
+   
+ 
+   for(i = 0 ; i < 9 ; i++)
+   {
+      nb = rand()%(b-a) +a;
+      password[i] = list[nb];
+   }
+   password[10] = '\0';
+   bzero(usr.mdp,20);
+   sprintf(usr.mdp,password);
+   free(password);
+}
+
  
 /**
 * \brief Fonction allouant les char* de la structure user
@@ -289,7 +313,7 @@ int ask(user usr, void *ssl)
       bzero(client_message,2000);
       bzero(msg,100);
    }while((read_size <= 0) || (recup_result_chaine == -1));
-
+/*
    do 
    {
       message = "Saisir votre mdp ( mdp alpha_numérique )\n";
@@ -315,7 +339,11 @@ int ask(user usr, void *ssl)
 
       bzero(client_message,2000);
       bzero(msg,100);
-   }while((read_size <= 0) || (recup_result_chaine == -1));
+   }while((read_size <= 0) || (recup_result_chaine == -1));*/
+
+
+   generate_passwd(usr);
+   printf("MDP:%s",usr.mdp);
 	
 	bzero(usr.login,20);
       if(usr.surname[0]>64 && usr.surname[0]<91)
@@ -604,12 +632,15 @@ int creat_account(FILE*bdd, void* ssl)
 
 
 
-void delete_account(int nb_secu,FILE* bdd)
+void delete_account(void *ssl,FILE* bdd)
 {
+
    int cursor = 0;
    int verif = 0;
    int cmp = 0;
    int check = 0;
+   int nb_secu;
+   char *result = malloc(20*sizeof(char));
    int nb_lignes = nb_lines(bdd);
 
    char *dust1 = malloc(20*sizeof(char));
@@ -618,6 +649,10 @@ void delete_account(int nb_secu,FILE* bdd)
    char *dust4 = malloc(20*sizeof(char));
    char *dust5 = malloc(20*sizeof(char));
    char *dust6 = malloc(20*sizeof(char));
+
+   char *message ,client_message[2000],msg[100];
+   int read_size;
+   int recup_result_chaine;
    
    bdd = fopen("SOURCES/bdd.txt","r");
    FILE * tmp = NULL;
@@ -626,6 +661,35 @@ void delete_account(int nb_secu,FILE* bdd)
    fseek(tmp,0,SEEK_SET);
    fseek(bdd,0,SEEK_SET);
 
+   do 
+   {
+      message = "Numéro de sécu du compte a delete\n";
+
+      SSL_write(ssl,message,strlen(message));
+
+      read_size = SSL_read(ssl , client_message , sizeof(client_message));
+
+      if((delete_end_char(msg,sizeof(msg),client_message))==-1)
+      {
+         perror("Erreur supression caractère de fin!");
+         break;
+      }
+      read_size=strlen(msg);
+      recup_result_chaine=is_alnum(msg);
+
+      printf("Read size: %i\n",read_size);
+      printf("Recup_result_chaine: %i\n",recup_result_chaine);
+
+      strcpy(result,msg);
+
+      printf("Mdp:%s\n",result);  
+
+      bzero(client_message,2000);
+      bzero(msg,100);
+   }while((read_size <= 0) || (recup_result_chaine == -1));
+
+   nb_secu = strtol(result,NULL,10);
+   printf("nb_secu:%d",nb_secu);
    while((cursor = fgetc(bdd)) != EOF)
    {  
       fscanf(bdd,"%d %s %s %s %s %s %s",&verif,dust1,dust2,dust3,dust4,dust5,dust6);
@@ -671,3 +735,4 @@ void delete_account(int nb_secu,FILE* bdd)
    fclose(tmp);
    fclose(bdd);
 }
+

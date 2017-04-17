@@ -212,6 +212,19 @@ int function_to_select(SSL *ssl, char *cmd, int*log)
          message = "Fichier créé\n";
          SSL_write(ssl , message , strlen(message));
       }
+      else if(strcmp(cmd_f,"del")==0)
+      {
+         printf("Delete IN\n");
+         FILE* bdd = NULL;
+         bdd = fopen("SOURCES/bdd.txt","a");
+         fclose(bdd);
+         delete_account(ssl,bdd);
+         printf("Delete OUT\n");
+         SSL_write(ssl,"Delete success\n",strlen("Delete success\n"));
+         printf("Fonction de choix de la commande OUT\n");
+
+      return 0;  
+      }
       
       else if(strcmp(cmd_f,"vim") == 0)
       {
