@@ -217,7 +217,7 @@ int main(int argc, char **argv)
 			  	  strcpy(user,log[2]);
 	           }
 
-		       else if( strcmp(log[0],"Dec") == 0)
+		       else if( strcmp(log[0],"Deco") == 0)
 		       {
 		          bzero(user,20);
 		          //delete_end_char(log[2],1024*sizeof(char),log[2]);
