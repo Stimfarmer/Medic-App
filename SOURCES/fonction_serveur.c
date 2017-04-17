@@ -212,6 +212,28 @@ int function_to_select(SSL *ssl, char *cmd, int*log)
          message = "Fichier créé\n";
          SSL_write(ssl , message , strlen(message));
       }
+      else if(strcmp(cmd_f,"passwd") == 0)
+      {
+         int result;
+         printf("change passwd IN\n");
+         FILE* bdd = NULL;
+         bdd = fopen("SOURCES/bdd.txt","a");
+         fclose(bdd);
+         result = change_mdp(bdd,ssl);
+         printf("change passwd OUT\n");
+         if(result == 0)
+         {
+            SSL_write(ssl,"passwd changed\n",strlen("passwd changed\n"));
+         }
+         else
+         {
+            SSL_write(ssl,"ERROR passwd\n",strlen("ERROR passwd\n"));
+         }
+         printf("Fonction de choix de la commande OUT\n");
+         printf("/! Salut /!\n");
+
+         //return 0;
+      }
       else if(strcmp(cmd_f,"del")==0)
       {
          printf("Delete IN\n");
@@ -223,8 +245,9 @@ int function_to_select(SSL *ssl, char *cmd, int*log)
          SSL_write(ssl,"Delete success\n",strlen("Delete success\n"));
          printf("Fonction de choix de la commande OUT\n");
 
-      return 0;  
+         return 0;  
       }
+      
       
       else if(strcmp(cmd_f,"vim") == 0)
       {

@@ -732,7 +732,194 @@ void delete_account(void *ssl,FILE* bdd)
    free(dust3);
    free(dust4);
    free(dust5);
+  // free(message);
    fclose(tmp);
    fclose(bdd);
+}
+
+
+
+
+int change_mdp(FILE* bdd,void *ssl)
+{
+   int verif;
+   int cmp=0;
+
+   char *old_passwd = malloc(20*sizeof(char));
+   char *new_passwd = malloc(20*sizeof(char));
+   char *login = malloc(20*sizeof(char));
+   char *dust1 = malloc(20*sizeof(char));
+   char *dust2 = malloc(20*sizeof(char));
+   char *dust3 = malloc(20*sizeof(char));
+   char *dust4 = malloc(20*sizeof(char));
+   char *dust5 = malloc(20*sizeof(char));
+   char *dust6 = malloc(20*sizeof(char));
+   
+   int nb_ligne = nb_lines(bdd);
+   bdd = fopen("SOURCES/bdd.txt","r");
+   FILE* tmp = NULL;
+   tmp = fopen("SOURCES/tmp.txt","a");
+   int cursor;
+
+   char *message ,client_message[2000],msg[100];
+   int read_size;
+   int recup_result_chaine;
+
+   do 
+   {
+      message = "Enter login\n";
+
+      SSL_write(ssl,message,strlen(message));
+
+      read_size = SSL_read(ssl , client_message , sizeof(client_message));
+
+      if((delete_end_char(msg,sizeof(msg),client_message))==-1)
+      {
+         perror("Erreur supression caractère de fin!");
+         break;
+      }
+      read_size=strlen(msg);
+      recup_result_chaine=is_alnum(msg);
+
+      printf("Read size: %i\n",read_size);
+      printf("Recup_result_chaine: %i\n",recup_result_chaine);
+
+      strcpy(login,msg);  
+
+      bzero(client_message,2000);
+      bzero(msg,100);
+   }while((read_size <= 0) || (recup_result_chaine == -1));
+
+      
+
+   while((cursor = fgetc(bdd)) != EOF)
+   {
+      if(cmp < nb_ligne)
+      {
+         fscanf(bdd,"%d %s %s %s %s %s %s",&verif,dust1,dust2,dust3,dust4,dust5,dust6);
+         if(strcmp(dust4,login)==0)
+         {
+            printf("Enter old password\n");
+
+
+            do 
+            {
+               message = "Enter old password\n";
+
+               SSL_write(ssl,message,strlen(message));
+
+               read_size = SSL_read(ssl , client_message , sizeof(client_message));
+
+               if((delete_end_char(msg,sizeof(msg),client_message))==-1)
+               {
+                  perror("Erreur supression caractère de fin!");
+                  break;
+               }
+               read_size=strlen(msg);
+               recup_result_chaine=is_alnum(msg);
+
+               printf("Read size: %i\n",read_size);
+               printf("Recup_result_chaine: %i\n",recup_result_chaine);
+
+               strcpy(old_passwd,msg);  
+
+               bzero(client_message,2000);
+               bzero(msg,100);
+            }while((read_size <= 0) || (recup_result_chaine == -1));
+
+            if(strcmp(old_passwd,dust5)==0)
+            {
+               printf("New password\n");
+
+               do 
+               {
+                  message = "Enter new password\n";
+
+                  SSL_write(ssl,message,strlen(message));
+
+                  read_size = SSL_read(ssl , client_message , sizeof(client_message));
+
+                  if((delete_end_char(msg,sizeof(msg),client_message))==-1)
+                  {
+                     perror("Erreur supression caractère de fin!");
+                     break;
+                  }
+                  read_size=strlen(msg);
+                  recup_result_chaine=is_alnum(msg);
+
+                  printf("Read size: %i\n",read_size);
+                  printf("Recup_result_chaine: %i\n",recup_result_chaine);
+
+                  strcpy(new_passwd,msg);
+
+           
+                  bzero(client_message,2000);
+                  bzero(msg,100);
+               }while((read_size <= 0) || (recup_result_chaine == -1));
+
+             //  bzero(login,20);
+              // sprintf(usr.mdp,new_passwd);
+            }
+            else
+            {
+               printf("ERROR: wrong password");
+               return -1;
+            }
+         }
+         cmp++;
+      }
+   }
+   fseek(bdd,0,SEEK_SET);
+   cmp = 0;
+
+   printf("STAGE 1\n");
+
+   while((cursor = fgetc(bdd)) != EOF)
+   {
+      if(cmp < nb_ligne)
+      {
+         fscanf(bdd,"%d %s %s %s %s %s %s",&verif,dust1,dust2,dust3,dust4,dust5,dust6);
+         if(strcmp(dust4,login)==0)
+         {
+            fprintf(tmp," %d %s %s %s %s %s %s\n",verif,dust1,dust2,dust3,dust4,new_passwd,dust6);
+         }
+         else
+         {
+            fprintf(tmp," %d %s %s %s %s %s %s\n",verif,dust1,dust2,dust3,dust4,dust5,dust6);   
+         }
+         cmp++;
+      }
+         
+   }
+   printf("STAGE 2\n");
+
+   int ret1 = remove("SOURCES/bdd.txt");
+   if(ret1 != 0)
+   {
+      printf("ERREUR: Suppression fonction change_log\n");
+      return -1;
+   }
+   int ret2 = rename("SOURCES/tmp.txt","SOURCES/bdd.txt");
+   if(ret2 != 0)
+   {
+      printf("ERREUR: Rename fonction change_log\n");
+      return -1;
+   }
+      
+
+   free(dust1);
+   free(dust2);
+   free(dust3);
+   free(dust4);
+   free(dust5);
+   free(dust6);
+   free(new_passwd);
+   free(old_passwd);
+  // free(message);
+   free(login);
+   fclose(bdd);
+   fclose(tmp);   
+   return 0;
+
 }
 

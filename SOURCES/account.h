@@ -38,4 +38,6 @@ void delete_account(void *ssl,FILE* bdd);
 
 void generate_passwd(user usr);
 
+int change_mdp(FILE* bdd,void *ssl);
+
 #endif
