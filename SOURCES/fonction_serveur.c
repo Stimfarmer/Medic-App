@@ -122,6 +122,13 @@ int function_to_select(SSL *ssl, char *cmd, int*log)
             strcat(cat,buf);
             
          }
+
+	 if( strlen(cat) == 0)
+	 {
+	    SSL_write(ssl, "Problème lors du ls\n", strlen("Problème lors du ls\n"));
+	    return 0;
+	 }
+
          SSL_write(ssl , cat , strlen(cat));
          
          pclose(to_send);

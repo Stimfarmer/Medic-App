@@ -220,7 +220,6 @@ int main(int argc, char **argv)
 
 		       else if( strcmp(log[0],"Deco") == 0)
 		       {
-			  printf("Hello\n");
 		          bzero(user,20);
 		          //delete_end_char(log[2],1024*sizeof(char),log[2]);
 			  strcat(user,"You");
