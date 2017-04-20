@@ -209,7 +209,8 @@ int main(int argc, char **argv)
 
 		    if( (strsplit(server_reply,log," ")) > 0)
 		    {
-		       delete_end_char(log[0],sizeof(log[0]),log[0]);
+
+		       delete_end_char(log[0],1024/*sizeof(log[0])*/,log[0]);
 		       if( strcmp(log[0],"Log") == 0)
 		       {
 		          bzero(user,20);
@@ -219,9 +220,10 @@ int main(int argc, char **argv)
 
 		       else if( strcmp(log[0],"Deco") == 0)
 		       {
+			  printf("Hello\n");
 		          bzero(user,20);
 		          //delete_end_char(log[2],1024*sizeof(char),log[2]);
-			  	  strcpy(user,"You");
+			  strcat(user,"You");
 	           }
 		       else if( strcmp(log[0],"dl") == 0)
 		       {
