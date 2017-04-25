@@ -1,0 +1,5 @@
+#usr/bin/expect -f 
+
+set DIR [lindex $argv 0]
+set FILE [lindex $argv 1]
+send "cd $DIR ; nano $FILE"
